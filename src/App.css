@@ -1,0 +1,38 @@
+.login-box, .signup-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+}
+
+.post-top-bar {
+  height: 58px;
+  width: 100%;
+  padding: 10px 16px;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  gap: 10px;
+}
+
+.post-top-bar b {
+  margin: auto 0 ;
+}
+
+.post-bottom-section {
+  padding: 10px 16px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.like-comment-post, .user-comment-post {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+

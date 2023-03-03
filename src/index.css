@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+html {
+  width: 100%;
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.logo-text {
+  font-family: 'Pacifico', cursive;
+  margin: 24px auto 32px auto;
+}
+
+.logo-text-top {
+  font-family: 'Pacifico', cursive;
+  margin: auto;
+}
+
+button, input {
+  font-family: inherit;
+}
+
+

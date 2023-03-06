@@ -1,3 +1,9 @@
+.App {
+  padding: 1px;
+}
+
+/* ----------------- LOGIN/ LOG OUT SECTION ---------------- */
+
 .login-box, .signup-box {
   display: flex;
   flex-direction: column;
@@ -6,6 +12,9 @@
   text-align: center;
   min-height: 100vh;
 }
+
+
+/* ----------------- POST SECTION ---------------- */
 
 .post-top-bar {
   height: 58px;
@@ -34,5 +43,31 @@
   flex-direction: row;
   gap: 10px;
 }
+
+/* ----------------- COMMENT SECTION ---------------- */
+
+.back-icon {
+  scale: 3;
+  cursor: pointer;
+  width: 50px;
+}
+
+
+.comment-section-owner, .user-comment-name {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.comment-section-owner-date, .user-comment-date {
+  color: grey;
+  font-size: 12px;
+  margin-left: 5px;
+}
+
+.comment-section-owner-description, .user-comment-description {
+  margin-right: 1rem;
+}
+
+
 
 

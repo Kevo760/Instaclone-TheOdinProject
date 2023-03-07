@@ -56,4 +56,34 @@ const CommentTextBarButton = styled.button`
     cursor: pointer;
 `
 
-export {Topbar, BottomBar, CommentTop, CommentBottom, CommentTextBarInput, CommentTextBarButton}
+const TopbarNotLoggedIn = styled(Topbar)`
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 0 16px;
+`
+
+const TopbarLogInButton = styled.button`
+    width: 70px;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    background-color: rgba(0, 168, 232);
+    cursor: pointer;
+    &:hover {
+    background-color: rgba(1, 80, 110);
+  }
+`
+
+const TopbarSignUpButton = styled(TopbarLogInButton)`
+    background-color: white;
+    color: rgba(0, 168, 232);
+    &:hover {
+    background-color: white;
+    color: rgba(1, 80, 110);
+  }
+`
+
+export {Topbar, BottomBar, CommentTop, CommentBottom, CommentTextBarInput, CommentTextBarButton, TopbarNotLoggedIn, TopbarLogInButton, TopbarSignUpButton}

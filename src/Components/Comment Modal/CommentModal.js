@@ -6,7 +6,7 @@ import UserComment from './UserComment'
 import CommentTopBar from './CommentTopBar'
 import CommentTextBar from './CommentTextBar'
 
-function CommentPage() {
+function CommentModal() {
   return (
     <CommentSection >
       <CommentTopBar />
@@ -35,4 +35,4 @@ function CommentPage() {
   )
 }
 
-export default CommentPage
+export default CommentModal

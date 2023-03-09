@@ -86,4 +86,11 @@ const TopbarSignUpButton = styled(TopbarLogInButton)`
   }
 `
 
-export {Topbar, BottomBar, CommentTop, CommentBottom, CommentTextBarInput, CommentTextBarButton, TopbarNotLoggedIn, TopbarLogInButton, TopbarSignUpButton}
+const ProfileTop = styled(Topbar)`
+    justify-content: left;
+    padding: 20px;
+    gap: 50px;
+    align-items: center;
+`
+
+export {Topbar, BottomBar, CommentTop, CommentBottom, CommentTextBarInput, CommentTextBarButton, TopbarNotLoggedIn, TopbarLogInButton, TopbarSignUpButton, ProfileTop}

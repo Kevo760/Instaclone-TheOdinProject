@@ -47,7 +47,7 @@
 /* ----------------- COMMENT SECTION ---------------- */
 
 .back-icon {
-  scale: 3;
+  scale: 2.5;
   cursor: pointer;
   width: 50px;
 }
@@ -67,6 +67,9 @@
 .comment-section-owner-description, .user-comment-description {
   margin-right: 1rem;
 }
+
+
+/* ----------------- PROFILE SECTION ---------------- */
 
 
 

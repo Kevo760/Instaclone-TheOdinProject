@@ -7,4 +7,14 @@ const CircleProfileSmall = styled.img`
     image-rendering: crisp-edges;
 `
 
-export {CircleProfileSmall}
+const CircleProfileLarge = styled(CircleProfileSmall)`
+    width: 100px;
+    height: 100px;
+
+    @media(max-width: 800px) {
+    width: 70px;
+    height: 70px;
+  }
+`
+
+export {CircleProfileSmall, CircleProfileLarge}

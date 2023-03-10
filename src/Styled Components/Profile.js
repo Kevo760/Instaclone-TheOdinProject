@@ -69,10 +69,11 @@ const ProfileUnFollowButton = styled(ProfileFollowButton)`
 `
 
 const ProfilePostImage = styled.img`
-    width: 100%;
-    height: 300px;
-    object-fit: fill;
+    height: 100%;
+    width: 100%; 
+    object-fit: contain;
     cursor: pointer;
+    background-color: rgba(0, 0, 0, .7);
 `
 
 

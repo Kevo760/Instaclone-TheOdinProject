@@ -48,12 +48,13 @@ const ProfileColumnTextBox = styled.div`
 
 const ProfileFollowButton = styled.button`
     margin: auto;
-    width: 92%;
+    width: 100%;
     padding: 10px;
     border: none;
     border-radius: 5px;
     font-weight: bold;
     color: white;
+    cursor: pointer;
     background-color: rgba(0, 168, 232);
     &:Hover {
         background-color: rgba(1, 80, 110);
@@ -61,11 +62,14 @@ const ProfileFollowButton = styled.button`
 `
 
 const ProfileUnFollowButton = styled(ProfileFollowButton)`
-    color: black;
-    background-color: rgba(0, 168, 232);
+    background-color: rgb(108, 117, 125);
     &:Hover {
-        background-color: rgb(200, 200, 200);
+        background-color: rgb(33, 37, 41);
     }
+`
+
+const EditProfileButton = styled(ProfileFollowButton)`
+
 `
 
 const ProfilePostImage = styled.img`
@@ -76,5 +80,23 @@ const ProfilePostImage = styled.img`
     background-color: rgba(0, 0, 0, .7);
 `
 
+const EditProfileBox = styled(ProfileBox)`
+   align-items: center;
+`
 
-export {ProfileBox,ProfileTopSection, ProfileUserInfoSection, ProfileColumnTextBox, ProfileFollowButton, ProfileUnFollowButton, ProfileImagesSection, ProfilePostImage}
+const EditProfileBioInput = styled.textarea`
+    width: 100%;
+    height: 80px;
+    padding: 10px;
+    resize: none;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+`
+
+
+export {
+    ProfileBox,ProfileTopSection, ProfileUserInfoSection,
+    ProfileColumnTextBox, ProfileFollowButton, ProfileUnFollowButton,
+    ProfileImagesSection, ProfilePostImage, EditProfileButton, 
+    EditProfileBox, EditProfileBioInput
+}

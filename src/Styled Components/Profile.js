@@ -80,6 +80,15 @@ const ProfilePostImage = styled.img`
     background-color: rgba(0, 0, 0, .7);
 `
 
+const EditProfileModal = styled.div`
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: white;
+    top: 0;
+    left: 0;
+`
+
 const EditProfileBox = styled(ProfileBox)`
    align-items: center;
 `
@@ -98,5 +107,5 @@ export {
     ProfileBox,ProfileTopSection, ProfileUserInfoSection,
     ProfileColumnTextBox, ProfileFollowButton, ProfileUnFollowButton,
     ProfileImagesSection, ProfilePostImage, EditProfileButton, 
-    EditProfileBox, EditProfileBioInput
+    EditProfileBox, EditProfileBioInput, EditProfileModal
 }

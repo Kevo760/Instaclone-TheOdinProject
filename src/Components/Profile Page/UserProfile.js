@@ -14,12 +14,9 @@ function UserProfile() {
 
   const showFollowing = !follow ? <ProfileFollowButton>Follow</ProfileFollowButton> : <ProfileUnFollowButton>Unfollow</ProfileUnFollowButton>;
 
-  const [showEditPage, setShowEditPage] = useState(false)
+  // const [showEditPage, setShowEditPage] = useState(false)
 
   return (
-     showEditPage ?
-      <EditProfilePage />
-      :
       <ProfileBox>
         <ProfileTopBar />
 
@@ -50,14 +47,10 @@ function UserProfile() {
           </p>
         </ProfileUserInfoSection>
         
-        {
-          AuthUser ?
-            <EditProfileButton>Edit Profile</EditProfileButton>
-            :
-            showFollowing
-        }
+  
+        {showFollowing}
+      
         
-
         <ProfileImagesSection>
 
           <ProfilePostImage src={supra} />

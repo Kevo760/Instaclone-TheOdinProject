@@ -37,6 +37,7 @@ const ProfileImagesSection = styled.div`
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     border-top: 1px solid rgba(229, 229, 229);
+    grid-gap: 2px;
     
 `
 
@@ -78,6 +79,9 @@ const ProfilePostImage = styled.img`
     object-fit: contain;
     cursor: pointer;
     background-color: rgba(0, 0, 0, .7);
+    &:Hover {
+        opacity: 0.4;
+    }
 `
 
 const EditProfileModal = styled.div`

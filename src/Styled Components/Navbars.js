@@ -93,4 +93,8 @@ const ProfileTop = styled(Topbar)`
     align-items: center;
 `
 
-export {Topbar, BottomBar, CommentTop, CommentBottom, CommentTextBarInput, CommentTextBarButton, TopbarNotLoggedIn, TopbarLogInButton, TopbarSignUpButton, ProfileTop}
+
+export {Topbar, BottomBar, 
+    CommentTop, CommentBottom, CommentTextBarInput, CommentTextBarButton, 
+    TopbarNotLoggedIn, TopbarLogInButton, TopbarSignUpButton, 
+    ProfileTop }

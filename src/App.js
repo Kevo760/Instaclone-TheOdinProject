@@ -5,6 +5,7 @@ import CommentModal from './Components/Comment Modal/CommentModal';
 import ImagePostModal from './Components/Image Post Modal/ImagePostModal';
 import Login from './Components/Login';
 import Logobar from './Components/Logobar';
+import MainPage from './Components/MainPage';
 import NotLoggedInTopNav from './Components/NotLoggedInTopNav';
 import PostBox from './Components/PostBox';
 import EditProfilePage from './Components/Profile Page/EditProfilePage';
@@ -15,7 +16,7 @@ function App() {
 
   return (
     <div className="App">
-      
+      <MainPage />
     </div>
   );
 }

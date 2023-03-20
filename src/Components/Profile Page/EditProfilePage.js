@@ -6,6 +6,9 @@ import ProfilePic from '../../images/profile.jpg'
 
 
 function EditProfilePage() {
+
+
+  // Hides scroll bar behind modal
   useEffect(() => {
     function hideOverflow() {
       document.body.style.overflow = 'hidden';

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const ImagePostBox = styled.div`
-    margin: 50px auto;
+    margin: 80px auto;
     display: flex;
     flex-direction: column;
     width: 670px;
@@ -14,4 +14,13 @@ const ImagePostBox = styled.div`
   }
 `
 
-export {ImagePostBox}
+const ImagePostBoxModal = styled.div`
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: white;
+    top: 0;
+    left: 0;
+`
+
+export {ImagePostBox, ImagePostBoxModal}

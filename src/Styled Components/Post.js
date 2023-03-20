@@ -2,8 +2,8 @@ import styled from "styled-components";
 
 const Post = styled.div`
     width: 480px;
-    height: 460px;
-    margin: 5rem auto;
+    height: fit-content;
+    margin: auto;
     display: flex;
     flex-direction: column;
     overflow: auto;
@@ -11,15 +11,26 @@ const Post = styled.div`
 `
 
 const ImgPost = styled.img`
-    width: 100%;
-    object-fit: fill;
+    height: 100%;
+    object-fit: contain;
+`
+
+const CommentModalBox = styled.div`
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: white;
 `
 
 const CommentSection = styled(Post)`
     padding: 16px;
-    overflow: visible;
+    overflow: auto;
     height: fit-content;
     font-size: 15px;
+    margin: 80px auto;
 `
 
 const CommentSectionOwnerPost = styled.div`
@@ -47,4 +58,6 @@ const UserCommentDescription = styled(CommentSectionOwnerDescription)`
 
 
 
-export {Post, ImgPost, CommentSection, CommentSectionOwnerPost, CommentSectionOwnerDescription, UserCommentPost, UserCommentDescription}
+export {Post, ImgPost, 
+    CommentSection, CommentSectionOwnerPost, CommentSectionOwnerDescription, CommentModalBox,
+    UserCommentPost, UserCommentDescription}

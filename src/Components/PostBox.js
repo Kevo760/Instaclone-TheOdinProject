@@ -1,6 +1,8 @@
 import React from 'react'
 import { ImgPost, Post } from '../Styled Components/Post'
 import gtr from '../images/gtr.jpg'
+import sti from '../images/sti.jpg'
+import bot from '../images/bot.jpg'
 import profile from '../images/profile.jpg'
 import { CircleProfileSmall } from '../Styled Components/CircleProfileImg'
 
@@ -12,7 +14,7 @@ function PostBox() {
             <b>user</b>
         </div>
 
-        <ImgPost src={gtr}/>
+        <ImgPost src={bot}/>
         <div className='post-bottom-section'>
             <div className='like-comment-post'>
                 <p>Like</p> 

@@ -1,17 +1,32 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { CircleProfileSmall } from '../../Styled Components/CircleProfileImg'
-import { CommentSection, CommentSectionOwnerDescription, CommentSectionOwnerPost } from '../../Styled Components/Post'
+import { CommentModalBox, CommentSection, CommentSectionOwnerDescription, CommentSectionOwnerPost } from '../../Styled Components/Post'
 import ProfilePic from '../../images/profile.jpg'
 import UserComment from './UserComment'
 import CommentTopBar from './CommentTopBar'
 import CommentTextBar from './CommentTextBar'
 
 function CommentModal() {
-  return (
-    <CommentSection >
-      <CommentTopBar />
 
-        <CommentSectionOwnerPost>
+
+  // Hides scroll bar behind modal
+  useEffect(() => {
+    function hideOverflow() {
+      document.body.style.overflow = 'hidden';
+    }
+    
+    hideOverflow();
+    return function showAutoOverflow() {
+      document.body.style.overflow = 'auto'
+    };
+  }, [])
+
+  return (
+    <CommentModalBox>
+      <CommentSection >
+        <CommentTopBar />
+
+          <CommentSectionOwnerPost>
             <CircleProfileSmall src={ProfilePic} alt='Profile picture' />
 
             <CommentSectionOwnerDescription>
@@ -24,14 +39,15 @@ function CommentModal() {
                   He stepped away from the mic.
                 </p>
             </CommentSectionOwnerDescription>
-        </CommentSectionOwnerPost>
+          </CommentSectionOwnerPost>
 
-        <UserComment />
-        <UserComment />
-        <UserComment />
+          <UserComment />
+          <UserComment />
+          <UserComment />
 
-      <CommentTextBar />
-    </CommentSection>
+        <CommentTextBar />
+      </CommentSection>
+    </CommentModalBox>
   )
 }
 

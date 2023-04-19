@@ -11,6 +11,7 @@ const Topbar = styled.div`
     border-bottom: 1px solid rgba(229, 229, 229);
     box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
     background-color: white;
+    z-index: 1;
 `
 
 const BottomBar = styled.div`

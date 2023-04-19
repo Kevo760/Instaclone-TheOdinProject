@@ -94,7 +94,9 @@ const EditProfileModal = styled.div`
 `
 
 const EditProfileBox = styled(ProfileBox)`
+   margin-top: 80px;
    align-items: center;
+   box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgb(209, 213, 219) 0px 0px 0px 1px inset;
 `
 
 const EditProfileBioInput = styled.textarea`

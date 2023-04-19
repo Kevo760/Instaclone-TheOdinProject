@@ -22,6 +22,7 @@ const SmallSignBox = styled(Signform)`
     display: flex;
     align-items: center;
     justify-content: center;
+    
 `
 
 const SignInput = styled.input`

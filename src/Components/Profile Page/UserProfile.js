@@ -1,16 +1,15 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { CircleProfileLarge } from '../../Styled Components/CircleProfileImg'
 import { ProfileBox, ProfileTopSection, ProfileUserInfoSection, ProfileColumnTextBox, ProfileFollowButton, ProfileImagesSection, ProfilePostImage, ProfileUnFollowButton, EditProfileButton } from '../../Styled Components/Profile'
 import ProfileTopBar from './ProfileTopBar'
 import ProfilePic from '../../images/profile.jpg'
 import supra from '../../images/supra.jpg'
 import sti from '../../images/sti.jpg'
-import EditProfilePage from './EditProfilePage'
 
 function UserProfile() {
-  const AuthUser = true;
+  const AuthUser = false;
 
-  const follow = true;
+  const follow = false;
 
   const showFollowing = !follow ? <ProfileFollowButton>Follow</ProfileFollowButton> : <ProfileUnFollowButton>Unfollow</ProfileUnFollowButton>;
 

@@ -1,8 +1,33 @@
 import React from 'react'
+import styled from "styled-components";
 import { CircleProfileSmall } from '../../Styled Components/CircleProfileImg'
-import { UserCommentDescription, UserCommentPost } from '../../Styled Components/Post'
 import ProfilePic from '../../images/profile.jpg'
 
+const UserCommentDescription = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    .user-comment-name {
+        font-weight: bold;
+        font-size: 14px;
+    }
+    .user-comment-date {
+        color: grey;
+        font-size: 12px;
+        margin-left: 5px;
+    }
+    .user-comment-description {
+        margin-right: 1rem;
+    }
+`
+const UserCommentPost = styled.div`
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 16px;
+    border-bottom: none;
+`
 function UserComment() {
   return (
     <UserCommentPost>

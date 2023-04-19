@@ -1,10 +1,58 @@
 import React, { useEffect } from 'react'
+import styled from "styled-components";
 import { CircleProfileSmall } from '../../Styled Components/CircleProfileImg'
-import { CommentModalBox, CommentSection, CommentSectionOwnerDescription, CommentSectionOwnerPost } from '../../Styled Components/Post'
 import ProfilePic from '../../images/profile.jpg'
 import UserComment from './UserComment'
 import CommentTopBar from './CommentTopBar'
 import CommentTextBar from './CommentTextBar'
+
+const CommentModalBox = styled.div`
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: white;
+`
+const CommentSection = styled.div`
+    padding: 16px;
+    overflow: auto;
+    height: fit-content;
+    font-size: 15px;
+    margin: 80px auto;
+    width: 480px;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgb(209, 213, 219) 0px 0px 0px 1px inset;
+`
+const CommentSectionOwnerDescription = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    .comment-section-owner {
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .comment-section-owner-date {
+      color: grey;
+      font-size: 12px;
+      margin-left: 5px;
+    }
+    .comment-section-owner-description {
+      margin-right: 1rem;
+    }
+`
+const CommentSectionOwnerPost = styled.div`
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(229, 229, 229);
+`
+
 
 function CommentModal() {
 

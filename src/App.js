@@ -11,12 +11,13 @@ import PostBox from './Components/PostBox';
 import EditProfilePage from './Components/Profile Page/EditProfilePage';
 import UserProfile from './Components/Profile Page/UserProfile';
 import Signup from './Components/Signup';
+import ImageUploadPage from './Components/Image Upload Page/ImageUploadPage';
 
 function App() {
 
   return (
     <div className="App">
-      <UserProfile />
+      <ImageUploadPage />
     </div>
   );
 }

@@ -12,12 +12,13 @@ import EditProfilePage from './Components/Profile Page/EditProfilePage';
 import UserProfile from './Components/Profile Page/UserProfile';
 import Signup from './Components/Signup';
 import ImageUploadPage from './Components/Image Upload Page/ImageUploadPage';
+import SearchPage from './Components/Search Page/SearchPage';
 
 function App() {
 
   return (
     <div className="App">
-      <ImageUploadPage />
+      <SearchPage />
     </div>
   );
 }

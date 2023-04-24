@@ -1,9 +1,8 @@
 import React from 'react'
-import styled from "styled-components"
+import styled from 'styled-components'
 import { BiArrowBack} from 'react-icons/bi'
 
-
-const ProfileTop = styled.div`
+const SearchTopBar = styled.div`
     display: flex;
     justify-content: left;
     padding: 20px;
@@ -25,13 +24,13 @@ const ProfileTop = styled.div`
     } 
 `
 
-function ProfileTopBar({backClickFunction}) {
+function SearchNavBar({backClickFunction}) {
   return (
-    <ProfileTop>
-        <BiArrowBack className='back-icon' onClick={backClickFunction}/>
-        <h2>USER</h2> 
-    </ProfileTop>
+    <SearchTopBar >
+        <BiArrowBack className='back-icon' onClick={backClickFunction} />
+        <h2>Search</h2> 
+    </SearchTopBar>
   )
 }
 
-export default ProfileTopBar
+export default SearchNavBar

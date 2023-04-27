@@ -7,6 +7,7 @@ import { Slider } from '@mui/material'
 import {BiImageAdd} from 'react-icons/bi'
 import ImageUploadNavBar from './ImageUploadNavBar'
 import styled from "styled-components";
+import BottomNav from '../../BottomNav'
 
 const ControlButton = styled.button`
     width: 100%;
@@ -191,6 +192,7 @@ function ImageCropSection() {
   return (
     <ImageUploadBox>
       <ImageUploadNavBar />
+      <BottomNav />
 
         <AddImgLabel htmlFor='add-img'>
             <input className='hidden' id ='add-img' type="file" accept="image/*" onChange={onSelectFile} />

@@ -25,7 +25,7 @@ function ImageUploadPage() {
 
   return (
     <ImageUploadBox>
-     
+     <ImageCropSection />
     </ImageUploadBox>
   )
 }

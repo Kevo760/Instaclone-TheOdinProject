@@ -5,10 +5,11 @@ import ProfileTopBar from './ProfileTopBar'
 import ProfilePic from '../../images/profile.jpg'
 import supra from '../../images/supra.jpg'
 import sti from '../../images/sti.jpg'
+import BottomNav from '../BottomNav'
 
 
 const ProfileBox = styled.div`
-    margin: 70px auto;
+    margin: 70px auto 40px auto;
     display: flex;
     flex-direction: column;
     width: 670px;
@@ -85,19 +86,14 @@ const ProfileUnFollowButton = styled(ProfileFollowButton)`
 `
 
 function UserProfile() {
-  const AuthUser = false;
-
+  const AuthUser = true;
   const follow = false;
-
   const showFollowing = !follow ? <ProfileFollowButton>Follow</ProfileFollowButton> : <ProfileUnFollowButton>Unfollow</ProfileUnFollowButton>;
-
-  const showEditProfileButton = <ProfileUnFollowButton>Edit Profile</ProfileUnFollowButton>
-
-  // const [showEditPage, setShowEditPage] = useState(false)
 
   return (
       <ProfileBox>
         <ProfileTopBar />
+        <BottomNav />
 
         <ProfileTopSection >
           <CircleProfileLarge src={ProfilePic} alt='Profile Picture'/>
@@ -128,9 +124,9 @@ function UserProfile() {
         
   
         { AuthUser ?
-          showEditProfileButton
-          :
           showFollowing
+          :
+          null
         }
       
         

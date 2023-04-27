@@ -15,6 +15,7 @@ const BottomBar = styled.div`
     align-items: center;
     background-color: white;
     border-top: 1px solid rgba(229, 229, 229);
+    z-index: 1;
     .icons {
       transform: scale(1.5);
       cursor: pointer;

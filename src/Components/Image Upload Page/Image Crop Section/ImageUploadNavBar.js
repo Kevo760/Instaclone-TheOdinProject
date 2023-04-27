@@ -13,23 +13,15 @@ const ImageUploadTopBar = styled.div`
     box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
     background-color: white;
     z-index: 1;
-    justify-content: left;
+    justify-content: center;
     gap: 50px;
     align-items: center;
     padding-left: 20px;
 `
 
-const backIconStyle = {
-  transform: 'scale(2)',
-  marginLeft: '10px',
-  cursor: 'pointer'
-}
-
-
-function ImageUploadNavBar(backArrowFunction) {
+function ImageUploadNavBar() {
   return (
     <ImageUploadTopBar>
-        <BiArrowBack style={backIconStyle} onClick={backArrowFunction}/>
         <h3>New post</h3>
     </ImageUploadTopBar>
   )

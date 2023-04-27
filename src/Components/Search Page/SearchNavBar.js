@@ -1,10 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import { BiArrowBack} from 'react-icons/bi'
 
 const SearchTopBar = styled.div`
     display: flex;
-    justify-content: left;
+    justify-content: center;
     padding: 20px;
     gap: 20px;
     align-items: center;
@@ -17,17 +16,11 @@ const SearchTopBar = styled.div`
     box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
     background-color: white;
     z-index: 1;
-    .back-icon {
-        scale: 2.5;
-        cursor: pointer;
-        width: 50px;
-    } 
 `
 
-function SearchNavBar({backClickFunction}) {
+function SearchNavBar() {
   return (
     <SearchTopBar >
-        <BiArrowBack className='back-icon' onClick={backClickFunction} />
         <h2>Search</h2> 
     </SearchTopBar>
   )

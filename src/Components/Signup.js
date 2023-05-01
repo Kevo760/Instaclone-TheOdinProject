@@ -3,9 +3,11 @@ import styled from "styled-components"
 import { LogoText } from '../Styled Components/TextStyles'
 import {BiImageAdd} from 'react-icons/bi'
 import { CircleProfileLarge } from '../Styled Components/CircleProfileImg'
-import { createUserWithEmailAndPassword } from "firebase/auth"
-import { auth, storage } from '../firebase'
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
+import { auth, storage, db } from '../firebase'
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"
+import { doc, setDoc } from "firebase/firestore"
+import LoadingBox from './LoadingBox'
 
 
 
@@ -16,8 +18,10 @@ const SignUpSection = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
-  min-height: 100vh;
-  
+  height: 100%;
+  width: 100%;
+  padding: 80px 10px 10px 10px;
+
 `
 
 const SignUpForm = styled.form`
@@ -95,6 +99,7 @@ const SignButton = styled.button`
 function Signup() {
   const [profileImage, setProfileImage] = useState(null)
   const [showError, setShowError] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const showProfileImg = <div><CircleProfileLarge src={profileImage} alt='profile image'/></div>
 
@@ -102,44 +107,43 @@ function Signup() {
     e.preventDefault()
     const email = e.target[0].value
     const fullName = e.target[1].value
-    const userName = e.target[2].value
+    const displayName = e.target[2].value
     const password = e.target[3].value
     const file = e.target[4].files[0]
 
     try {
         const res = await createUserWithEmailAndPassword(auth, email, password)
         
-        const storageRef = ref(storage, userName);
+        const storageRef = ref(storage, displayName);
 
         const uploadTask = uploadBytesResumable(storageRef, file);
 
-        // Register three observers:
-        // 1. 'state_changed' observer, called any time the state changes
-        // 2. Error observer, called on failure
-        // 3. Completion observer, called on successful completion
-        uploadTask.on('state_changed', 
-        (snapshot) => {
-            // Observe state change events such as progress, pause, and resume
-            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload is ' + progress + '% done');
-            switch (snapshot.state) {
-            case 'paused':
-                console.log('Upload is paused');
-                break;
-            case 'running':
-                console.log('Upload is running');
-                break;
-            }
-        }, 
+        uploadTask.on(
         (error) => {
             // Handle unsuccessful uploads
             setShowError(true)
         }, 
         () => {
             // Handle successful uploads on complete
-            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            console.log('File available at', downloadURL);
+            getDownloadURL(uploadTask.snapshot.ref).then( async(downloadURL) => {
+                await updateProfile(res.user, {
+                    displayName,
+                    photoURL: downloadURL,
+
+                });
+                // Create a user on firebase storage
+                await setDoc(doc(db,'users', res.user.uid), {
+                    uid: res.user.id,
+                    displayName,
+                    email,
+                    fullName,
+                    photoURL: downloadURL,
+                    
+                });
+                await setDoc(doc(db, 'userFollow', res.user.uid), {
+                    followers: '',
+                    following: '',
+                })
             });
         }
         );
@@ -150,7 +154,7 @@ function Signup() {
     
    
   }
-
+  // Shows selected profile image on sign up page
   const onImageChange = (e) => {
     if(e.target.files && e.target.files[0]) {
         setProfileImage(URL.createObjectURL(e.target.files[0]))
@@ -158,6 +162,13 @@ function Signup() {
   }
 
   return (
+    <>
+    {
+        isLoading ?
+        <LoadingBox />
+        :
+        null
+    }
     <SignUpSection>
         <SignUpForm onSubmit={handleCreateAccount}>
             <LogoText>Instaclone</LogoText>
@@ -217,6 +228,7 @@ function Signup() {
 
         <SmallSignBox>Have an account? <a>Log in</a></SmallSignBox>
     </SignUpSection>
+    </>
   )
 }
 

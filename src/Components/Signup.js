@@ -5,9 +5,10 @@ import {BiImageAdd} from 'react-icons/bi'
 import { CircleProfileLarge } from '../Styled Components/CircleProfileImg'
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
 import { auth, storage, db } from '../firebase'
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"
+import { ref, uploadBytesResumable, getDownloadURL, uploadBytes } from "firebase/storage"
 import { doc, setDoc } from "firebase/firestore"
 import LoadingBox from './LoadingBox'
+import { Link, useNavigate } from 'react-router-dom'
 
 
 
@@ -100,11 +101,14 @@ function Signup() {
   const [profileImage, setProfileImage] = useState(null)
   const [showError, setShowError] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
 
   const showProfileImg = <div><CircleProfileLarge src={profileImage} alt='profile image'/></div>
 
   const handleCreateAccount = async (e) => {
     e.preventDefault()
+    setIsLoading(true)
+    
     const email = e.target[0].value
     const fullName = e.target[1].value
     const displayName = e.target[2].value
@@ -113,46 +117,68 @@ function Signup() {
 
     try {
         const res = await createUserWithEmailAndPassword(auth, email, password)
+        const userID = res.user.uid
+        const user = res.user
         
-        const storageRef = ref(storage, displayName);
+        const storageRef = ref(storage, displayName)
+        const uploadTask = uploadBytesResumable(storageRef, file)
 
-        const uploadTask = uploadBytesResumable(storageRef, file);
-
-        uploadTask.on(
+        // Register three observers:
+        // 1. 'state_changed' observer, called any time the state changes
+        // 2. Error observer, called on failure
+        // 3. Completion observer, called on successful completion
+        uploadTask.on('state_changed', 
+        (snapshot) => {
+            // Observe state change events such as progress, pause, and resume
+            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+            switch (snapshot.state) {
+            case 'paused':
+                console.log('Upload is paused');
+                break;
+            case 'running':
+                console.log('Upload is running');
+                break;
+            }
+        }, 
         (error) => {
             // Handle unsuccessful uploads
             setShowError(true)
+            setIsLoading(false)
         }, 
         () => {
             // Handle successful uploads on complete
-            getDownloadURL(uploadTask.snapshot.ref).then( async(downloadURL) => {
-                await updateProfile(res.user, {
-                    displayName,
-                    photoURL: downloadURL,
+            // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+            getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                await updateProfile(user, {
+                displayName,
+                photoURL: downloadURL,
 
                 });
                 // Create a user on firebase storage
-                await setDoc(doc(db,'users', res.user.uid), {
-                    uid: res.user.id,
+                await setDoc(doc(db,'users', userID), {
+                    uid: userID,
                     displayName,
                     email,
                     fullName,
                     photoURL: downloadURL,
                     
                 });
-                await setDoc(doc(db, 'userFollow', res.user.uid), {
+                // Create a user on firebase storage
+                await setDoc(doc(db, 'userFollowings', userID), {
                     followers: '',
                     following: '',
                 })
+                // After finishing navigate to home
+                navigate('/')
             });
         }
         );
     }catch(err) {
         setShowError(true)
+        setIsLoading(false)
     }
-
-    
-   
   }
   // Shows selected profile image on sign up page
   const onImageChange = (e) => {
@@ -193,6 +219,8 @@ function Signup() {
             <SignInput 
                 placeholder='Username'
                 type='text'
+                // No spaces allowed
+                pattern='^\w[a-zA-Z@#0-9.]*$'
                 required
             />
             <SignInput 
@@ -226,7 +254,7 @@ function Signup() {
 
         </SignUpForm>
 
-        <SmallSignBox>Have an account? <a>Log in</a></SmallSignBox>
+        <SmallSignBox>Have an account? <Link to='/login'>Log In</Link></SmallSignBox>
     </SignUpSection>
     </>
   )

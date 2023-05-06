@@ -1,5 +1,6 @@
 import React from 'react'
 import {FaSearch, FaHome, FaPlusSquare, FaUserCircle} from 'react-icons/fa'
+import { useNavigate } from 'react-router-dom';
 import styled from "styled-components";
 
 const BottomBar = styled.div`
@@ -23,12 +24,14 @@ const BottomBar = styled.div`
 `
 
 function BottomNav() {
+  const navigate = useNavigate()
+
   return (
     <BottomBar>
-        <FaHome className='icons'/>
-        <FaSearch className='icons'/>
-        <FaPlusSquare className='icons'/>
-        <FaUserCircle className='icons'/>
+        <FaHome className='icons' onClick={() => navigate('/')}/>
+        <FaSearch className='icons' onClick={() => navigate('/search')}/>
+        <FaPlusSquare className='icons' onClick={() => navigate('/post')}/>
+        <FaUserCircle className='icons' onClick={() => navigate('/myprofile')}/>
     </BottomBar>
   )
 }

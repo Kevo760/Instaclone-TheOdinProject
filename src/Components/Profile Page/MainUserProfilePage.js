@@ -1,11 +1,14 @@
 import React from 'react'
 import styled from "styled-components"
 import { CircleProfileLarge } from '../../Styled Components/CircleProfileImg'
-import ProfileTopBar from './ProfileTopBar'
 import ProfilePic from '../../images/profile.jpg'
 import supra from '../../images/supra.jpg'
 import sti from '../../images/sti.jpg'
 import BottomNav from '../BottomNav'
+import { signOut } from 'firebase/auth'
+import { auth } from '../../firebase'
+import MainProfileTopBar from './MainProfileTopBar'
+
 
 
 const ProfileBox = styled.div`
@@ -17,7 +20,7 @@ const ProfileBox = styled.div`
     overflow: visible;
     height: fit-content;
     font-size: 15px;
-    gap: 20px;
+    gap: 10px;
 
     @media(max-width: 800px) {
     width: 480px;
@@ -85,11 +88,18 @@ const ProfileUnFollowButton = styled(ProfileFollowButton)`
     }
 `
 
+const ProfileLogOutBtn = styled(ProfileFollowButton)`
+    background-color: tomato;
+    &:Hover {
+        background-color: red;
+    }
+`
+
 function MainUserProfilePage() {
-  
+
     return (
         <ProfileBox>
-          <ProfileTopBar />
+          <MainProfileTopBar  />
           <BottomNav />
   
           <ProfileTopSection >
@@ -121,6 +131,7 @@ function MainUserProfilePage() {
           
     
           <ProfileUnFollowButton>Edit Profile</ProfileUnFollowButton>
+          <ProfileLogOutBtn onClick={() => signOut(auth)}>Log Out</ProfileLogOutBtn>
         
           
           <ProfileImagesSection>

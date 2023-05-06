@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { LogoText } from '../Styled Components/TextStyles'
+import { Link, useNavigate } from 'react-router-dom'
+import { signInWithEmailAndPassword } from "firebase/auth"
+import { auth } from '../firebase'
 
 const LoginBox = styled.div`
   display: flex;
@@ -8,22 +11,19 @@ const LoginBox = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
-  min-height: 100vh;
+  height: 100%;
+  width: 100%;
 `
 
-const Signform = styled.form`
+const SignInForm = styled.form`
+    margin-top: 80px;
     width: 350px;
-    height: 400px;
+    height: 350px;
     padding: 16px;
     border: 1px solid rgba(229, 229, 229);
     
 `
-
-const SignInBox = styled(Signform)`
-    height: 350px;
-`
-
-const SmallSignBox = styled(Signform)`
+const SmallSignBox = styled(SignInForm)`
     margin-top: 20px;
     height: 100px;
     display: flex;
@@ -44,6 +44,7 @@ const SignInput = styled.input`
     border: 1px solid rgba(229, 229, 229);
     border-radius: 4px;
     background-color: rgba(248, 249, 250);
+    outline: none;
 `
 
 const SignButton = styled.button`
@@ -64,25 +65,59 @@ const SignButton = styled.button`
     }
 `
 
+const ErrorBox = styled.b`
+  display: block;
+  margin-top: 20px;
+  color: tomato;
+`
+
 function Login() {
+  const [showErr, setShowErr] = useState(false)
+  const navigate = useNavigate()
+
+  const errMessage = <ErrorBox>Something went wrong, try again.</ErrorBox>
+
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const email = e.target[0].value
+    const password = e.target[1].value
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password)
+        navigate('/')
+    } catch (err) {
+      setShowErr(true)
+    }
+  }
+
   return (
     <LoginBox>
-        <SignInBox>
+        <SignInForm onSubmit={handleLogin}>
           <LogoText>Instaclone</LogoText>
           <SignInput
             placeholder='Email'
             type='email'
+            required
           />
           <SignInput
             placeholder='Password'
             type='password'
+            required
           />
 
-          <SignButton>Log In</SignButton>
-        </SignInBox>
+          <SignButton type='submit'>Log In</SignButton>
+
+          {
+            showErr ?
+            errMessage
+            :
+            null
+          }
+        </SignInForm>
 
         <SmallSignBox>
-          <p>Don't have an account? <a href='www.google.com'>Sign up</a></p>
+          <p>Don't have an account? <Link to='/signup'>Sign Up</Link></p>
         </SmallSignBox>
 
     </LoginBox>

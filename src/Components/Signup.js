@@ -163,13 +163,13 @@ function Signup() {
                     email,
                     fullName,
                     photoURL: downloadURL,
-                    
+                    followers: [],
+                    following: [],
+                    aboutMe: '',
                 });
-                // Create a user on firebase storage
-                await setDoc(doc(db, 'userFollowings', userID), {
-                    followers: '',
-                    following: '',
-                })
+                await setDoc(doc(db,'userPost', userID), {
+                    post: []
+                });
                 // After finishing navigate to home
                 navigate('/')
             });

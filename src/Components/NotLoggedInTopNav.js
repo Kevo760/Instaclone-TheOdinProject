@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from "styled-components";
 import { LogoText } from '../Styled Components/TextStyles';
+import { useNavigate } from 'react-router-dom';
 
 
 const TopbarNotLoggedIn = styled.div`
@@ -50,16 +51,18 @@ const TopbarSignUpButton = styled(TopbarLogInButton)`
   }
 `
 
-function NotLoggedInTopNav({logInHandler, signUpHandler}) {
+function NotLoggedInTopNav() {
+  const navigate = useNavigate()
+
   return (
     <TopbarNotLoggedIn>
         <LogoText className='not-loggedin-logo'>Instaclone</LogoText>
         <div className='not-loggedin-buttons'>
-            <TopbarLogInButton onClick={logInHandler}>
+            <TopbarLogInButton onClick={() => navigate('/login')}>
                 Log in
             </TopbarLogInButton>
 
-            <TopbarSignUpButton onClick={signUpHandler}>
+            <TopbarSignUpButton onClick={() => navigate('/signup')}>
                 Sign Up
             </TopbarSignUpButton>
         </div>

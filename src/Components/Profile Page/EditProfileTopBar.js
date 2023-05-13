@@ -24,10 +24,10 @@ const ProfileTop = styled.div`
     }
 `
 
-function EditProfileTopBar() {
+function EditProfileTopBar({backFunction}) {
   return (
     <ProfileTop>
-        <BiArrowBack className='back-icon' />
+        <BiArrowBack className='back-icon' onClick={backFunction} />
         <h2>Edit Profile</h2> 
     </ProfileTop>
   )

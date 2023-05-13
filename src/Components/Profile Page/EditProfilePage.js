@@ -6,8 +6,8 @@ import ProfilePic from '../../images/profile.jpg'
 
 const EditProfileModal = styled.div`
     position: fixed;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     background-color: white;
     top: 0;
     left: 0;
@@ -27,9 +27,9 @@ const EditProfileBox = styled.div`
     display: flex;
     flex-direction: column;
     width: 670px;
-    padding: 26px;
+    padding: 20px;
     overflow: visible;
-    height: fit-content;
+    height: 440px;
     font-size: 15px;
     gap: 20px;
     align-items: center;
@@ -70,7 +70,7 @@ const BioSection = styled.div`
 `
 
 
-function EditProfilePage() {
+function EditProfilePage({backFunction}) {
 
   // Hides scroll bar behind modal
   useEffect(() => {
@@ -87,7 +87,7 @@ function EditProfilePage() {
   return (
     <EditProfileModal>
       <EditProfileBox>
-        <EditProfileTopBar />
+        <EditProfileTopBar backFunction={backFunction} />
 
         <CircleProfileLarge src={ProfilePic} alt='Profile Image' />
 

@@ -9,26 +9,26 @@ import ImgWrapper from './ImageWrapper';
 import styled from 'styled-components';
 import ImageFilterTopNav from './ImageFilterTopNav';
 import profile from '../../../images/profile.jpg'
+import { useUploadedImg } from '../../../Context/ImgUploadContext';
 
 
+const ImageFilterSectionBox = styled.div`
+  width: 500px;
+  height: fit-content;
+  margin-top: 30px;
+  display: block;
+`
 
 function ImageFilterSection() {
   const [filterClass, setFilterClass] = useState('filter-normal')
-
-  const ImageFilterSectionBox = styled.div`
-    width: 500px;
-    height: fit-content;
-    margin-top: 30px;
-    display: block;
-  `
-
+  const upImg = useUploadedImg()
 
   return (
     <ImageFilterSectionBox>
       <ImageFilterTopNav />
 
-      <ImgWrapper filterClass={filterClass} imgSrc={profile} />
-      <Filters filterClass={filterClass} setFilterClass={setFilterClass} imgSrc={profile}/>
+      <ImgWrapper filterClass={filterClass} imgSrc={upImg} />
+      <Filters filterClass={filterClass} setFilterClass={setFilterClass} imgSrc={upImg}/>
     </ImageFilterSectionBox>
   )
 }

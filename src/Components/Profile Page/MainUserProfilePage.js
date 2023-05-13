@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from "styled-components"
 import { CircleProfileLarge } from '../../Styled Components/CircleProfileImg'
 import ProfilePic from '../../images/profile.jpg'
@@ -8,6 +8,7 @@ import BottomNav from '../BottomNav'
 import { signOut } from 'firebase/auth'
 import { auth } from '../../firebase'
 import MainProfileTopBar from './MainProfileTopBar'
+import EditProfilePage from './EditProfilePage'
 
 
 
@@ -97,11 +98,20 @@ const ProfileLogOutBtn = styled(ProfileFollowButton)`
 
 function MainUserProfilePage() {
 
+  const [open, setOpen] = useState(false)
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
+
     return (
-        <ProfileBox>
+      <>
+        {
+          open ?
+          <EditProfilePage handleClose={handleClose} backFunction={handleClose}/>
+          :
+          <ProfileBox>
           <MainProfileTopBar  />
           <BottomNav />
-  
+          
           <ProfileTopSection >
             <CircleProfileLarge src={ProfilePic} alt='Profile Picture'/>
   
@@ -130,7 +140,7 @@ function MainUserProfilePage() {
           </ProfileUserInfoSection>
           
     
-          <ProfileUnFollowButton>Edit Profile</ProfileUnFollowButton>
+          <ProfileUnFollowButton onClick={handleOpen}>Edit Profile</ProfileUnFollowButton>
           <ProfileLogOutBtn onClick={() => signOut(auth)}>Log Out</ProfileLogOutBtn>
         
           
@@ -160,6 +170,10 @@ function MainUserProfilePage() {
           </ProfileImagesSection>
           
       </ProfileBox>
+        }
+      
+      </>
+        
     )
 }
 

@@ -8,6 +8,7 @@ import {BiImageAdd} from 'react-icons/bi'
 import ImageUploadNavBar from './ImageUploadNavBar'
 import styled from "styled-components";
 import BottomNav from '../../BottomNav'
+import { useSetImgToUpload } from '../../../Context/ImgUploadContext'
 
 const ControlButton = styled.button`
     width: 100%;
@@ -30,7 +31,7 @@ const ControlButton = styled.button`
 `
 
 const ImageUploadBox = styled.div`
-    margin-top: 40px;
+    margin: 40px;
     padding: 10px;
     display: flex;
     flex-direction: column;
@@ -103,7 +104,9 @@ function centerAspectCrop(
   }
   
 
-function ImageCropSection() {
+function ImageCropSection(props) {
+  const {showFilterSection} = props
+
   const [imgSrc, setImgSrc] = useState('')
   const previewCanvasRef = useRef()
   const imgRef = useRef()
@@ -114,9 +117,10 @@ function ImageCropSection() {
   const [rotate, setRotate] = useState(0)
   const aspect = 1 / 1
 
-  const [test, setTest] = useState()
+  const setUploadImg = useSetImgToUpload()
 
-  
+ 
+
 
   function resetRotateScale() {
     setScale(1)
@@ -158,10 +162,10 @@ function ImageCropSection() {
 
       //  ** This function allows user to download the cropped image **
 
-
-      setTest(blobUrlRef.current)
-      console.log(test)
-    
+      // sets crop image to upImg variable
+      setUploadImg(blobUrlRef.current)
+      // sets next steps to show filter section
+      showFilterSection()
     })
   }
 

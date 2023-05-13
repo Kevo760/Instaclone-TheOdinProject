@@ -22,7 +22,7 @@ const ImageUploadTopBar = styled.div`
 function ImageUploadNavBar() {
   return (
     <ImageUploadTopBar>
-        <h3>New post</h3>
+        <h2>New post</h2>
     </ImageUploadTopBar>
   )
 }

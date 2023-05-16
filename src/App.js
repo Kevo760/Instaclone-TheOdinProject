@@ -8,6 +8,7 @@ import SearchPage from './Components/Search Page/SearchPage';
 import MainUserProfilePage from './Components/Profile Page/MainUserProfilePage';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthContext } from './Context/AuthContext';
+import { ImgPageHandlerProvider } from './Context/ImgPageHandlerContext';
 
 function App() {
   const {currentUser} = useContext(AuthContext)
@@ -40,7 +41,14 @@ function App() {
             <Route path='login' element={<LoggedInProtection> <Login /> </LoggedInProtection>} />
             <Route path='signup' element={<LoggedInProtection> <Signup /> </LoggedInProtection>} />
             <Route path='search' element={<NotLoggedInProtection> <SearchPage/> </NotLoggedInProtection>} />
-            <Route path='post' element={<NotLoggedInProtection> <ImageUploadPage /> </NotLoggedInProtection>} />
+            <Route path='post' 
+              element={
+              <NotLoggedInProtection>
+                <ImgPageHandlerProvider>
+                  <ImageUploadPage />
+                </ImgPageHandlerProvider>
+              </NotLoggedInProtection>} 
+              />
             <Route path='myprofile' element={<NotLoggedInProtection> <MainUserProfilePage/> </NotLoggedInProtection>} />
           </Route>
         </Routes>

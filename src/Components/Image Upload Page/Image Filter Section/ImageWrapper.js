@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import profile from '../../../images/profile.jpg'
 
 
 const ImgWrapperStyles = styled.div`

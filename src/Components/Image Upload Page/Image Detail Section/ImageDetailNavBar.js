@@ -1,6 +1,7 @@
 import React from 'react'
 import {IoArrowBack, IoCheckmarkSharp }from 'react-icons/io5'
 import styled from 'styled-components';
+import { useShowFilterSection } from '../../../Context/ImgPageHandlerContext';
 
 const ImageDetailTopBar = styled.div`
     display: grid;
@@ -17,26 +18,28 @@ const ImageDetailTopBar = styled.div`
     background-color: white;
     z-index: 1;
     text-align: center;
+    .back-icon {
+      scale: 2;
+      margin-left: 20px;
+      cursor: pointer;
+    }
+    .check-icon {
+      scale: 2;
+      margin-left: auto;
+      margin-right: 20px;
+      cursor: pointer;
+    }
 `
-const backIconStyle = {
-  transform: 'scale(2)',
-  marginLeft: '20px',
-  cursor: 'pointer'
-}
 
-const checkIconStyle = {
-  transform: 'scale(2)',
-  marginLeft: 'auto',
-  marginRight: '20px',
-  cursor: 'pointer'
-}
 
-function ImageDetailNavBar(backArrowFunction, uploadFunction) {
+function ImageDetailNavBar() {
+  const showFilterSection = useShowFilterSection()
+
   return (
     <ImageDetailTopBar>
-        <IoArrowBack onClick={backArrowFunction} style={backIconStyle}/>
+        <IoArrowBack onClick={showFilterSection} className='back-icon'/>
         <h2>New post</h2>
-        <IoCheckmarkSharp onClick={uploadFunction} style={checkIconStyle } />
+        <IoCheckmarkSharp className='check-icon' />
     </ImageDetailTopBar>
   )
 }

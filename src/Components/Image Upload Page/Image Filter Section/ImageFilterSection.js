@@ -8,8 +8,8 @@ import Filters from './Filters';
 import ImgWrapper from './ImageWrapper';
 import styled from 'styled-components';
 import ImageFilterTopNav from './ImageFilterTopNav';
-import profile from '../../../images/profile.jpg'
 import { useUploadedImg } from '../../../Context/ImgUploadContext';
+import { useShowDetailSection } from '../../../Context/ImgPageHandlerContext';
 
 
 const ImageFilterSectionBox = styled.div`
@@ -21,13 +21,32 @@ const ImageFilterSectionBox = styled.div`
 
 function ImageFilterSection() {
   const [filterClass, setFilterClass] = useState('filter-normal')
+  const [showImg, setShowImg] = useState()
+  const filterImgRef = useRef()
+
   const upImg = useUploadedImg()
+  const showDetailSection = useShowDetailSection()
+
+  const test =  async() => {
+    console.log(filterImgRef)
+    const imgData = await htmlToImage.toJpeg(filterImgRef.current)
+    setShowImg(imgData)
+  }
 
   return (
     <ImageFilterSectionBox>
       <ImageFilterTopNav />
+      <button onClick={test}>Click Me</button>
 
-      <ImgWrapper filterClass={filterClass} imgSrc={upImg} />
+      {
+        showImg ?
+        <img src={showImg}/>
+        :
+        null
+      }
+
+    <ImgWrapper filterClass={filterClass} imgSrc={upImg} />
+      
       <Filters filterClass={filterClass} setFilterClass={setFilterClass} imgSrc={upImg}/>
     </ImageFilterSectionBox>
   )

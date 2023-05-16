@@ -9,6 +9,7 @@ import ImageUploadNavBar from './ImageUploadNavBar'
 import styled from "styled-components";
 import BottomNav from '../../BottomNav'
 import { useSetImgToUpload } from '../../../Context/ImgUploadContext'
+import { useShowFilterSection } from '../../../Context/ImgPageHandlerContext'
 
 const ControlButton = styled.button`
     width: 100%;
@@ -73,14 +74,6 @@ const AddImgText = styled.span`
     font-weight: bold;
 `
 
-const BottomControlBox = styled(CropControlBox)`
-    flex-direction: row;
-    gap: 10px;
-    justify-content: space-between;
-`
-
-
-
 // This is to demonstate how to make and center a % aspect crop
 // which is a bit trickier so we use some helper functions.
 function centerAspectCrop(
@@ -104,8 +97,7 @@ function centerAspectCrop(
   }
   
 
-function ImageCropSection(props) {
-  const {showFilterSection} = props
+function ImageCropSection() {
 
   const [imgSrc, setImgSrc] = useState('')
   const previewCanvasRef = useRef()
@@ -118,6 +110,7 @@ function ImageCropSection(props) {
   const aspect = 1 / 1
 
   const setUploadImg = useSetImgToUpload()
+  const showFilterSection = useShowFilterSection()
 
  
 
@@ -195,7 +188,7 @@ function ImageCropSection(props) {
 
   return (
     <ImageUploadBox>
-      <ImageUploadNavBar />
+      <ImageUploadNavBar imgSrc={imgSrc} onDownloadCropClick={onDownloadCropClick}/>
       <BottomNav />
 
         <AddImgLabel htmlFor='add-img'>
@@ -237,6 +230,8 @@ function ImageCropSection(props) {
           }
         />
         </div>
+
+        <ControlButton onClick={resetRotateScale} disabled={!imgSrc}>Reset</ControlButton>
       </CropControlBox>
 
       <div>
@@ -274,14 +269,6 @@ function ImageCropSection(props) {
       )}
      </div>
 
-     <BottomControlBox>
-
-      <ControlButton onClick={resetRotateScale} disabled={!imgSrc}>Reset</ControlButton>
-
-      <ControlButton onClick={onDownloadCropClick} disabled={!imgSrc}>Next</ControlButton>
-
-     </BottomControlBox>
-      
      
     </ ImageUploadBox>
   )

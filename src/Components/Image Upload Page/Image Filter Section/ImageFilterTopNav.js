@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from "styled-components";
-import {IoArrowBack, IoArrowForward }from 'react-icons/io5'
+import { IoArrowBack, IoArrowForward }from 'react-icons/io5'
+import { useShowCropSection, useShowDetailSection } from '../../../Context/ImgPageHandlerContext';
+
 
 const ImageFilterTopBar = styled.div`
         display: grid;
@@ -17,29 +19,29 @@ const ImageFilterTopBar = styled.div`
         background-color: white;
         z-index: 1;
         text-align: center;
+        .back-icon {
+          scale: 2;
+          cursor: pointer;
+          margin-left: 20px;
+        }
+        .fordward-icon {
+          scale: 2;
+          cursor: pointer;
+          margin-right: 20px;
+          margin-left: auto;
+        }
     `
-const backIconStyle = {
-  transform: 'scale(2)',
-  marginLeft: '10px',
-  cursor: 'pointer'
-}
-
-const forwardIconStyle = {
-  transform: 'scale(2)',
-  marginLeft: 'auto',
-  marginRight: '20px',
-  cursor: 'pointer'
-}
 
 
-function ImageFilterTopNav(backArrowFunction, forwardArrowFunction) {
-
+function ImageFilterTopNav() {
+    const showCropSection = useShowCropSection()
+    const showDetailSection = useShowDetailSection()
     
   return (
     <ImageFilterTopBar>
-        <IoArrowBack onClick={backArrowFunction} style={backIconStyle}/>
+        <IoArrowBack onClick={showCropSection} className='back-icon'/>
         <h2>New post</h2>
-        <IoArrowForward onClick={forwardArrowFunction} style={forwardIconStyle} />
+        <IoArrowForward onClick={showDetailSection} className='fordward-icon' />
     </ImageFilterTopBar>
   )
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import ImageCropSection from './Image Crop Section/ImageCropSection'
 import ImageDetailSection from './Image Detail Section/ImageDetailSection'
 import ImageFilterSection from './Image Filter Section/ImageFilterSection'
@@ -17,14 +17,8 @@ const ImageUploadBox = styled.div`
     gap: 10px;
 `
 
-
-
-
 function ImageUploadPage() {
-  const [isLoading, setIsLoading] = useState(true)
   const showStep = useImgCurrentPage()
-
-
 
   return (
     <ImgUploadProvider>

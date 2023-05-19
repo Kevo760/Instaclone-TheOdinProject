@@ -4,30 +4,33 @@ import styled from 'styled-components'
 
 const ImgWrapperStyles = styled.div`
     width: 100%;
+    height: 100%;
     display: flex;
+    margin: auto;
+    padding: 10px;
     .img-container {
-        width: fit-content;
-        max-width: 100%;
-        height: 360px;
+        width: 100%;
+        height: 100%;
         margin: auto;
         img {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            border-radius: 6px;
+            border-radius: 5px;
         }
     }
 `
 
-const ImgWrapper = ({ filterClass, imgSrc}) => {
+const ImgWrapper = ({ filterClass, imgSrc, filterImgRef}) => {
 
     return (
         <ImgWrapperStyles>
-            <figure className='img-container'>
+            <figure className='img-container' >
                 <img
                     className={filterClass}
                     src={imgSrc}
-                    alt=''
+                    alt='filtered image'
+                    ref={filterImgRef}
                 />
             </figure>
         </ImgWrapperStyles>

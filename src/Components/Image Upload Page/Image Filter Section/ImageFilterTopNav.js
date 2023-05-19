@@ -33,15 +33,16 @@ const ImageFilterTopBar = styled.div`
     `
 
 
-function ImageFilterTopNav() {
+function ImageFilterTopNav({handleShowDetailSection}) {
     const showCropSection = useShowCropSection()
-    const showDetailSection = useShowDetailSection()
+
+    
     
   return (
     <ImageFilterTopBar>
         <IoArrowBack onClick={showCropSection} className='back-icon'/>
         <h2>New post</h2>
-        <IoArrowForward onClick={showDetailSection} className='fordward-icon' />
+        <IoArrowForward onClick={handleShowDetailSection} className='fordward-icon' />
     </ImageFilterTopBar>
   )
 }

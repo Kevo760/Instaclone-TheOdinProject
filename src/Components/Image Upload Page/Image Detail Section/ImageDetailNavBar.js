@@ -32,14 +32,14 @@ const ImageDetailTopBar = styled.div`
 `
 
 
-function ImageDetailNavBar() {
+function ImageDetailNavBar({handlePostUpload}) {
   const showFilterSection = useShowFilterSection()
 
   return (
     <ImageDetailTopBar>
         <IoArrowBack onClick={showFilterSection} className='back-icon'/>
         <h2>New post</h2>
-        <IoCheckmarkSharp className='check-icon' />
+        <IoCheckmarkSharp onClick={handlePostUpload} className='check-icon' />
     </ImageDetailTopBar>
   )
 }

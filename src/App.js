@@ -1,4 +1,3 @@
-import { useContext, useEffect, useState } from 'react';
 import './App.css';
 import Login from './Components/Login';
 import MainPage from './Components/MainPage';
@@ -7,11 +6,11 @@ import ImageUploadPage from './Components/Image Upload Page/ImageUploadPage';
 import SearchPage from './Components/Search Page/SearchPage';
 import MainUserProfilePage from './Components/Profile Page/MainUserProfilePage';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { AuthContext } from './Context/AuthContext';
+import { useAuth } from './Context/AuthContext';
 import { ImgPageHandlerProvider } from './Context/ImgPageHandlerContext';
 
 function App() {
-  const {currentUser} = useContext(AuthContext)
+  const currentUser = useAuth()
   console.log(currentUser)
 
   const NotLoggedInProtection = ({children}) => {

@@ -1,7 +1,6 @@
 import React, {useState, useRef} from 'react'
 import '../../../Styles/instagram.min.css'
 import * as htmlToImage from 'html-to-image';
-import {toJpeg} from 'html-to-image';
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import Filters from './Filters';
@@ -26,7 +25,6 @@ function ImageFilterSection() {
   const upImg = useUploadedImg()
   const imgToUpload = useSetImgToUpload()
   const showDetailSection = useShowDetailSection()
-
 
 
   const handleShowDetailSection = async () => {

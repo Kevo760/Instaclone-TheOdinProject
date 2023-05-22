@@ -54,56 +54,59 @@ function ImageDetailSection() {
   const handlePostUpload = async(e) => {
     e.preventDefault()
     const postRef = doc(db, 'userPost', userID)
+    const mainPagePostRef = doc(db, 'mainPagePost', 'post')
+    const generatePostId = uuidv4()
 
-    await updateDoc(postRef, {
-      post: arrayUnion({
-        postID: uuidv4(),
-        postImg: 'test',
-        
-      })
-    })
-    
-  }
+      try {
+        const storageRef = ref(storage, displayName + '/' + generatePostId)
+        const uploadTask = uploadBytesResumable(storageRef, upImg)
 
-  const test = () => {
-    try {
-      const storageRef = ref(storage, displayName + '/post' + serverTimestamp())
-      const uploadTask = uploadBytesResumable(storageRef, upImg);
+        uploadTask.on('state_changed', 
+        (snapshot) => {
+          // Observe state change events such as progress, pause, and resume
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          switch (snapshot.state) {
+            case 'paused':
+              console.log('Upload is paused');
+              break;
+            case 'running':
+              console.log('Upload is running');
+              break;
+          }
+        }, 
+        (error) => {
+          // Handle unsuccessful uploads
+          setShowErr(true)
+        }, 
+        () => {
+          // Handle successful uploads on complete
+          // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
 
-
-      uploadTask.on('state_changed', 
-      (snapshot) => {
-        // Observe state change events such as progress, pause, and resume
-        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('Upload is ' + progress + '% done');
-        switch (snapshot.state) {
-          case 'paused':
-            console.log('Upload is paused');
-            break;
-          case 'running':
-            console.log('Upload is running');
-            break;
+            // Adds post object on user post
+            await updateDoc(postRef, generatePostId, {
+                postID: generatePostId,
+                imgURL: downloadURL,
+                comments: '',
+                likes: [],
+                timestamp: serverTimestamp(),
+            })
+            // adds postid to mainpage post
+            await updateDoc(mainPagePostRef, {
+              postID: arrayUnion({
+                generatePostId
+              })}
+            )
+          });
         }
-      }, 
-      (error) => {
-        // Handle unsuccessful uploads
-        setShowErr(true)
-      }, 
-      () => {
-        // Handle successful uploads on complete
-        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log('File available at', downloadURL);
-        });
-      }
-    );
-  } catch(error) {
-    setShowErr(true)
-  }
+      );
+    } catch(error) {
+      setShowErr(true)
+    }
   }
 
- 
 
   return (
     <ImageDetailBox>

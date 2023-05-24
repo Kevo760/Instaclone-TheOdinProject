@@ -8,6 +8,8 @@ import { db, storage } from '../../../firebase';
 import { useAuth } from '../../../Context/AuthContext';
 import { arrayUnion, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid'
+import LoadingBox from '../../LoadingBox';
+import { useNavigate } from 'react-router-dom';
 
 const ImageDetailBox = styled.div`
     width: 480px;
@@ -42,10 +44,12 @@ const FormSection = styled.form`
 function ImageDetailSection() {
   const [showErr, setShowErr] = useState(false)
   const [textValue, setTextValue] = useState()
+  const [isLoading, setIsLoading] = useState(false)
   const upImg = useUploadedImg()
   const user = useAuth()
   const displayName = user.currentUser.displayName
   const userID = user.currentUser.uid
+  const navigate = useNavigate()
 
   const handleOnChangeText = (e) => {
     setTextValue(e.target.value)
@@ -53,6 +57,8 @@ function ImageDetailSection() {
   
   const handlePostUpload = async(e) => {
     e.preventDefault()
+
+    setIsLoading(true)
     const postRef = doc(db, 'userPost', userID)
     const mainPagePostRef = doc(db, 'mainPagePost', 'post')
     const generatePostId = uuidv4()
@@ -79,6 +85,7 @@ function ImageDetailSection() {
         (error) => {
           // Handle unsuccessful uploads
           setShowErr(true)
+          setIsLoading(false)
         }, 
         () => {
           // Handle successful uploads on complete
@@ -89,6 +96,7 @@ function ImageDetailSection() {
             await updateDoc(postRef, generatePostId, {
                 postID: generatePostId,
                 imgURL: downloadURL,
+                description: textValue,
                 comments: '',
                 likes: [],
                 timestamp: serverTimestamp(),
@@ -99,37 +107,48 @@ function ImageDetailSection() {
                 generatePostId
               })}
             )
+            // after upload is done navigate home
+            navigate('/')
           });
         }
       );
     } catch(error) {
       setShowErr(true)
+      setIsLoading(false)
     }
   }
 
 
   return (
-    <ImageDetailBox>
-        <ImageDetailNavBar handlePostUpload={handlePostUpload} />
-        <ImgWrapperDetail imgSrc={upImg} />
+    <>
+      {
+        isLoading ?
+        <LoadingBox />
+        :
+        null
+      }
+      <ImageDetailBox>
+          <ImageDetailNavBar handlePostUpload={handlePostUpload} />
+          <ImgWrapperDetail imgSrc={upImg} />
 
-        <FormSection onSubmit={handlePostUpload}>
-          <textarea
-            id="img-description"
-            placeholder='Add description'
-            onChange={handleOnChangeText}
-            rows="4"
-          />
-          {
-            showErr ?
-            <span>Something went wrong, try again.</span>
-            :
-            null
-          }
+          <FormSection onSubmit={handlePostUpload}>
+            <textarea
+              id="img-description"
+              placeholder='Add description'
+              onChange={handleOnChangeText}
+              rows="4"
+            />
+            {
+              showErr ?
+              <span>Something went wrong, try again.</span>
+              :
+              null
+            }
+            
+          </FormSection>
           
-        </FormSection>
-        
-    </ImageDetailBox>
+      </ImageDetailBox>
+    </>
   )
 }
 

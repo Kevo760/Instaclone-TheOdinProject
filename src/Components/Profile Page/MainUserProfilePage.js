@@ -1,14 +1,11 @@
 import React, { useState } from 'react'
 import styled from "styled-components"
 import { CircleProfileLarge } from '../../Styled Components/CircleProfileImg'
-import ProfilePic from '../../images/profile.jpg'
-import supra from '../../images/supra.jpg'
-import sti from '../../images/sti.jpg'
 import BottomNav from '../BottomNav'
 import { signOut } from 'firebase/auth'
-import { auth } from '../../firebase'
 import MainProfileTopBar from './MainProfileTopBar'
 import EditProfilePage from './EditProfilePage'
+import { useAuth } from '../../Context/AuthContext'
 
 
 
@@ -97,8 +94,12 @@ const ProfileLogOutBtn = styled(ProfileFollowButton)`
 `
 
 function MainUserProfilePage() {
-
   const [open, setOpen] = useState(false)
+  const auth = useAuth()
+  const user = auth.currentUser
+
+  console.log(user)
+
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
 
@@ -109,11 +110,11 @@ function MainUserProfilePage() {
           <EditProfilePage handleClose={handleClose} backFunction={handleClose}/>
           :
           <ProfileBox>
-          <MainProfileTopBar  />
+          <MainProfileTopBar user={user.displayName} />
           <BottomNav />
           
           <ProfileTopSection >
-            <CircleProfileLarge src={ProfilePic} alt='Profile Picture'/>
+            <CircleProfileLarge src={user.photoURL} alt='Profile Picture'/>
   
             <ProfileColumnTextBox>
               <h3>1,000</h3>
@@ -132,7 +133,7 @@ function MainUserProfilePage() {
           </ProfileTopSection >
   
           <ProfileUserInfoSection>
-            <b>Username</b>
+            <b>{user.displayName}</b>
   
             <p>
             Twenty-five stars were neatly placed on the piece of paper. There was room for five more stars but they would be difficult ones to earn. It had taken years to earn the first twenty-five, and they were considered the "easy" ones.
@@ -145,28 +146,7 @@ function MainUserProfilePage() {
         
           
           <ProfileImagesSection>
-  
-            <ProfilePostImage src={supra} />
-            <ProfilePostImage src={sti} />
-            <ProfilePostImage src={supra} />
-            <ProfilePostImage src={sti} />
-            <ProfilePostImage src={supra} />
-            <ProfilePostImage src={sti} />
-            <ProfilePostImage src={supra} />
-            <ProfilePostImage src={sti} />
-            <ProfilePostImage src={supra} />
-            <ProfilePostImage src={sti} />
-            <ProfilePostImage src={supra} />
-            <ProfilePostImage src={sti} />
-            <ProfilePostImage src={supra} />
-            <ProfilePostImage src={sti} />
-            <ProfilePostImage src={supra} />
-            <ProfilePostImage src={sti} />
-            <ProfilePostImage src={supra} />
-            <ProfilePostImage src={sti} />
-            <ProfilePostImage src={supra} />
-            <ProfilePostImage src={sti} />
-
+            
           </ProfileImagesSection>
           
       </ProfileBox>

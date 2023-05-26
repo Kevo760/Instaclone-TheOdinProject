@@ -1,8 +1,13 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from "styled-components";
 import { CircleProfileLarge } from '../../Styled Components/CircleProfileImg'
 import EditProfileTopBar from './EditProfileTopBar'
-import ProfilePic from '../../images/profile.jpg'
+import { useAuth } from '../../Context/AuthContext'
+import LoadingBox from '../LoadingBox'
+import { doc, updateDoc } from 'firebase/firestore'
+import { db } from '../../firebase'
+import {BiImageAdd} from 'react-icons/bi'
+
 
 const EditProfileModal = styled.div`
     position: fixed;
@@ -22,18 +27,41 @@ const EditProfileBioInput = styled.textarea`
     outline: none;
 `
 
-const EditProfileBox = styled.div`
+const EditProfileBox = styled.form`
     margin: 80px auto;
     display: flex;
     flex-direction: column;
     width: 670px;
-    padding: 20px;
+    padding: 16px;
     overflow: visible;
-    height: 440px;
+    height: fit-content;
     font-size: 15px;
-    gap: 20px;
     align-items: center;
     box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgb(209, 213, 219) 0px 0px 0px 1px inset;
+    .add-profile-pic {
+        margin: 20px auto;
+        font-weight: bold;
+
+    }
+    .add-profile-pic label {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 10px;
+        cursor: pointer;
+    }
+    .add-img-icon {
+        scale: 1.8;
+    }
+    .error-text {
+        color: tomato;
+        font-weight: bold;
+    }
+    .submit-box {
+      width: 100%;
+      margin: 10px auto;
+    }
+
 
     @media(max-width: 800px) {
     width: 480px;
@@ -55,22 +83,49 @@ const SubmitButton = styled.button`
     }
 `
 
-const EditButton = styled(SubmitButton)`
-    background-color: rgb(108, 117, 125);
-    &:Hover {
-        background-color: rgb(33, 37, 41);
-    }
-`
-
 const BioSection = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 10px;
 `
 
 
 function EditProfilePage({backFunction}) {
+  const [isLoading, setIsLoading] = useState(false)
+  const [profileImg, setProfileImg] = useState()
+  const [showError, setShowError] = useState(false)
+  const auth = useAuth()
+  const mainUser = auth.currentUser
+  const userUID = auth.currentUser.uid
+
+  // if user adds image to edit profile picture display the file if not use main users photo
+  const currentProfileImg = profileImg ? profileImg : mainUser.photoURL
+
+  const handleSubmit = async(e) => {
+    e.preventDefault()
+    setIsLoading(true)
+
+    const aboutMeText = e.target[1].value
+
+    const userRef = doc(db, 'users', userUID)
+
+    try {
+      await updateDoc(userRef, {
+        aboutMe: aboutMeText
+      })
+    }catch(error) {
+      setIsLoading(false)
+      setShowError(true)
+    }
+  }
+
+  // Shows selected profile image on sign up page
+  const onImageChange = (e) => {
+    if(e.target.files && e.target.files[0]) {
+        setProfileImg(URL.createObjectURL(e.target.files[0]))
+    }
+  }
+
 
   // Hides scroll bar behind modal
   useEffect(() => {
@@ -85,26 +140,55 @@ function EditProfilePage({backFunction}) {
   }, [])
 
   return (
-    <EditProfileModal>
-      <EditProfileBox>
-        <EditProfileTopBar backFunction={backFunction} />
+    <>
+      {
+        isLoading ?
+        <LoadingBox />
+        :
+        null
+      }
+      <EditProfileModal onSubmit={handleSubmit}>
+        <EditProfileBox>
+          <EditProfileTopBar backFunction={backFunction} />
 
-        <CircleProfileLarge src={ProfilePic} alt='Profile Image' />
+          <CircleProfileLarge src={currentProfileImg} alt='Profile Image' />
 
-        <EditButton>Edit Photo</EditButton>
+          <div className='add-profile-pic'>
+                <input 
+                    style={{display: 'none'}}
+                    type='file'
+                    id='file'
+                    accept="image/*"
+                    onChange={onImageChange}
+                />
+                <label htmlFor='file'>
+                    <BiImageAdd className='add-img-icon'/>
+                    <span>Edit profile picture</span>
+                </label>
+            </div>
 
-        <BioSection>
-            <b>Bio</b>
-            <EditProfileBioInput 
-                type='text'
-                placeholder='Add something about yourself'
-            />
-        </BioSection>
+          <BioSection>
+              <b>Bio</b>
+              <EditProfileBioInput 
+                  type='text'
+                  placeholder='Add something about yourself'
+                  required
+              />
+          </BioSection>
 
-        <SubmitButton>Submit Changes</SubmitButton>
-        
-    </EditProfileBox>
-    </EditProfileModal>
+          <div className='submit-box'>
+            <SubmitButton type='submit'>Submit Changes</SubmitButton>
+          </div>
+
+          {
+            showError ?
+            <span className='error-text'>Something went wrong, try again.</span>
+            :
+            null
+          }
+        </EditProfileBox>
+      </EditProfileModal>
+    </>
   )
 }
 

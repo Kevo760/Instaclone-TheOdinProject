@@ -98,7 +98,6 @@ function MainUserProfilePage() {
   const auth = useAuth()
   const user = auth.currentUser
 
-  console.log(user)
 
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)

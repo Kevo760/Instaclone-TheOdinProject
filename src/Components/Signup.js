@@ -5,7 +5,7 @@ import {BiImageAdd} from 'react-icons/bi'
 import { CircleProfileLarge } from '../Styled Components/CircleProfileImg'
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
 import { auth, storage, db } from '../firebase'
-import { ref, uploadBytesResumable, getDownloadURL, uploadBytes } from "firebase/storage"
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"
 import { doc, setDoc } from "firebase/firestore"
 import LoadingBox from './LoadingBox'
 import { Link, useNavigate } from 'react-router-dom'
@@ -105,7 +105,7 @@ function Signup() {
 
   const showProfileImg = <div><CircleProfileLarge src={profileImage} alt='profile image'/></div>
 
-  const handleCreateAccount = async (e) => {
+  const handleCreateAccount = async(e) => {
     e.preventDefault()
     setIsLoading(true)
     

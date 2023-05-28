@@ -10,7 +10,6 @@ import ImageFilterTopNav from './ImageFilterTopNav';
 import { useSetImgToUpload, useUploadedImg } from '../../../Context/ImgUploadContext';
 import { useShowDetailSection } from '../../../Context/ImgPageHandlerContext';
 
-
 const ImageFilterSectionBox = styled.div`
   width: 500px;
   height: fit-content;

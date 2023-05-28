@@ -190,9 +190,9 @@ function ImageCropSection() {
     <ImageUploadBox>
       <ImageUploadNavBar imgSrc={imgSrc} onDownloadCropClick={onDownloadCropClick}/>
       <BottomNav />
-
+        
         <AddImgLabel htmlFor='add-img'>
-            <input className='hidden' id ='add-img' type="file" accept="image/*" onChange={onSelectFile} />
+            <input name='add-img' className='hidden' id='add-img' type="file" accept="image/*" onChange={onSelectFile} />
             <BiImageAdd className='add-img-icon' />
             <AddImgText>Add Image</AddImgText>
         </AddImgLabel> 
@@ -200,9 +200,10 @@ function ImageCropSection() {
 
       <CropControlBox>
         <div>
-          <label htmlFor="scale-input">Scale</label>
+          <span>Scale</span>
           <Slider
             id="scale-input"
+            name="scale-input"
             aria-label="Always visible"
             defaultValue={1}
             step={0.01}
@@ -214,21 +215,21 @@ function ImageCropSection() {
         </div>
 
         <div>
-          <label htmlFor="rotate-input">Rotate</label>
-
+          <span>Rotate</span>
           <Slider
-          id="rotate-input"
-          aria-label="Always visible"
-          defaultValue={0}
-          step={1}
-          valueLabelDisplay="auto"
-          min={-180}
-          max={180}
-          disabled={!imgSrc}
-          onChange={(e) =>
-            setRotate(Math.min(180, Math.max(-180, Number(e.target.value))))
-          }
-        />
+            id="rotate-input"
+            name="rotate-input"
+            aria-label="Always visible"
+            defaultValue={0}
+            step={1}
+            valueLabelDisplay="auto"
+            min={-180}
+            max={180}
+            disabled={!imgSrc}
+            onChange={(e) =>
+              setRotate(Math.min(180, Math.max(-180, Number(e.target.value))))
+            }
+          />
         </div>
 
         <ControlButton onClick={resetRotateScale} disabled={!imgSrc}>Reset</ControlButton>

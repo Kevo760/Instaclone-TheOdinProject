@@ -5,8 +5,10 @@ import EditProfileTopBar from './EditProfileTopBar'
 import { useAuth } from '../../Context/AuthContext'
 import LoadingBox from '../LoadingBox'
 import { doc, updateDoc } from 'firebase/firestore'
-import { db } from '../../firebase'
+import { db, storage } from '../../firebase'
 import {BiImageAdd} from 'react-icons/bi'
+import { ref,uploadBytesResumable, getDownloadURL } from 'firebase/storage'
+import { updateProfile } from "firebase/auth"
 
 
 const EditProfileModal = styled.div`
@@ -92,27 +94,79 @@ const BioSection = styled.div`
 
 function EditProfilePage({backFunction}) {
   const [isLoading, setIsLoading] = useState(false)
-  const [profileImg, setProfileImg] = useState()
+  const [profileImg, setProfileImg] = useState(null)
   const [showError, setShowError] = useState(false)
   const auth = useAuth()
-  const mainUser = auth.currentUser
+  const user = auth.currentUser
   const userUID = auth.currentUser.uid
+  const displayName = auth.currentUser.displayName
 
   // if user adds image to edit profile picture display the file if not use main users photo
-  const currentProfileImg = profileImg ? profileImg : mainUser.photoURL
+  const currentProfileImg = profileImg ? profileImg : user.photoURL
 
   const handleSubmit = async(e) => {
     e.preventDefault()
     setIsLoading(true)
-
+    // handles about me text value
     const aboutMeText = e.target[1].value
+    const file = e.target[0].files[0]
 
     const userRef = doc(db, 'users', userUID)
+    const storageRef = ref(storage, displayName)
 
     try {
-      await updateDoc(userRef, {
-        aboutMe: aboutMeText
-      })
+      // if there is an about me text udate about me from main profile
+      if(aboutMeText) {
+        await updateDoc(userRef, {
+          aboutMe: aboutMeText
+        })
+      }
+      
+      // If there is file on profileImg variable upload new profile image and change profile image on firebase photoURL and on user object
+      if(profileImg) {
+        const uploadTask = uploadBytesResumable(storageRef, file)
+        // Register three observers:
+        // 1. 'state_changed' observer, called any time the state changes
+        // 2. Error observer, called on failure
+        // 3. Completion observer, called on successful completion
+        uploadTask.on('state_changed', 
+        (snapshot) => {
+            // Observe state change events such as progress, pause, and resume
+            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+            switch (snapshot.state) {
+            case 'paused':
+                console.log('Upload is paused');
+                break;
+            case 'running':
+                console.log('Upload is running');
+                break;
+            default:
+                  console.log(`Upload`);
+            }
+        }, 
+        (error) => {
+            // Handle unsuccessful uploads
+            setShowError(true)
+            setIsLoading(false)
+        }, 
+        () => {
+            // Handle successful uploads on complete
+            // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+            getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                await updateProfile(user, {
+                  photoURL: downloadURL,
+                })
+
+                await updateDoc(userRef, {
+                  photoURL: downloadURL,
+                })
+            });
+        }
+        );
+      }
+      // if there is an error set error true and set loading to false
     }catch(error) {
       setIsLoading(false)
       setShowError(true)
@@ -125,7 +179,6 @@ function EditProfilePage({backFunction}) {
         setProfileImg(URL.createObjectURL(e.target.files[0]))
     }
   }
-
 
   // Hides scroll bar behind modal
   useEffect(() => {
@@ -163,7 +216,7 @@ function EditProfilePage({backFunction}) {
                 />
                 <label htmlFor='file'>
                     <BiImageAdd className='add-img-icon'/>
-                    <span>Edit profile picture</span>
+                    <span>Change profile picture</span>
                 </label>
             </div>
 
@@ -172,7 +225,8 @@ function EditProfilePage({backFunction}) {
               <EditProfileBioInput 
                   type='text'
                   placeholder='Add something about yourself'
-                  required
+                  id='aboutme'
+                  name='aboutme'
               />
           </BioSection>
 

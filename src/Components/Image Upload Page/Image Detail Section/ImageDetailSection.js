@@ -80,6 +80,8 @@ function ImageDetailSection() {
             case 'running':
               console.log('Upload is running');
               break;
+            default:
+
           }
         }, 
         (error) => {
@@ -132,8 +134,10 @@ function ImageDetailSection() {
           <ImgWrapperDetail imgSrc={upImg} />
 
           <FormSection onSubmit={handlePostUpload}>
+            <label htmlFor='postDetail' style={{display: 'none'}}>add description</label>
             <textarea
-              id="img-description"
+              id="postDetail"
+              name='postDetail'
               placeholder='Add description'
               onChange={handleOnChangeText}
               rows="4"

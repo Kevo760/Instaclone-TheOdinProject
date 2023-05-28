@@ -8,6 +8,7 @@ import MainUserProfilePage from './Components/Profile Page/MainUserProfilePage';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { useAuth } from './Context/AuthContext';
 import { ImgPageHandlerProvider } from './Context/ImgPageHandlerContext';
+import { useEffect } from 'react';
 
 function App() {
   const currentUser = useAuth()
@@ -30,6 +31,10 @@ function App() {
       children
     )
   }
+
+  useEffect(() => {
+    console.log('test')
+  }, [])
 
   return (
     <div className="App">

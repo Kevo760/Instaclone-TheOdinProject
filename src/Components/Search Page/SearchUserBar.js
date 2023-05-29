@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { CircleProfileSmall } from '../../Styled Components/CircleProfileImg'
-import profile from '../../images/profile.jpg'
 
 const UserBar = styled.div`
     width: 500px;
@@ -13,6 +12,7 @@ const UserBar = styled.div`
     padding: 10px;
     cursor: pointer;
     border-radius: 10px;
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
     &:hover {
         background-color: rgb(173, 181, 189);
     }
@@ -22,16 +22,16 @@ const UserInfoSection = styled.div`
 
 `
 
-function SearchUserBar({user, viewProfile}) {
+const SearchUserBar =({user, viewProfile}) => {
     
 
   return (
     <UserBar onClick={viewProfile}>
-        <CircleProfileSmall src={profile} alt='profile picture'/>
+        <CircleProfileSmall src={user.photoURL} alt='profile picture'/>
 
         <UserInfoSection>
-            <b>Username</b>
-            <p>full name</p>
+            <b>{user.displayName}</b>
+            <p>{user.fullName}</p>
         </UserInfoSection>
     </UserBar>
   )

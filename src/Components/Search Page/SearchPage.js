@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import SearchNavBar from './SearchNavBar'
 import BottomNav from '../BottomNav'
 import {MdPersonSearch} from 'react-icons/md'
 import SearchUserBar from './SearchUserBar'
+import { collection, query, where, getDocs } from "firebase/firestore"
+import { db } from '../../firebase'
+
 
 const SearchBox = styled.div`
     margin-top: 80px;
@@ -14,7 +17,12 @@ const SearchBox = styled.div`
     justify-content: center;
     align-items: center;
     gap: 4px;
-    
+    .error-msg {
+      color: tomato;
+      font-weight: bold;
+      justify-content: center;
+      display: flex;
+    }
 `
 
 const SearchInputBox = styled.div`
@@ -45,7 +53,35 @@ const SearchResultBox = styled.div`
   max-width: 100%;
 `
 
-function SearchPage() {
+const SearchPage = () => {
+  const [username, setUsername] = useState('')
+  const [user, setUser] = useState(null)
+  const [showError, setShowError] = useState(false)
+
+  const handleSearch = async() => {
+    console.log(username)
+    const userRef = collection(db, 'users')
+    const q = query(userRef, where('displayName','==', username))
+
+    try {
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+      setUser(doc.data())
+      });
+    } catch(error) {
+      setShowError(true)
+    }
+  }
+
+  const handleKey = e => {
+    setUser(null)
+    setShowError(false)
+    if(e.code === 'Enter') {
+      handleSearch()
+    }
+    
+  }
+
   return (
     <SearchBox>
       <SearchNavBar />
@@ -53,13 +89,27 @@ function SearchPage() {
 
       <SearchInputBox>
         <SearchInput 
-          placeholder='Search user'
+          placeholder='Enter exact username'
+          id='user'
+          onChange={e => setUsername(e.target.value)}
+          onKeyDown={handleKey}
         />
         <MdPersonSearch className='search-icon' />
       </SearchInputBox>
 
       <SearchResultBox>
-      
+        {
+          user ? 
+          <SearchUserBar user={user}/>
+          :
+          null
+        }
+        {
+          showError ?
+          <span className='error-msg'>Something went wrong try again</span>
+          :
+          null
+        }
       </SearchResultBox>
 
     </SearchBox>

@@ -3,13 +3,15 @@ import ImageDetailNavBar from './ImageDetailNavBar'
 import styled from 'styled-components';
 import ImgWrapperDetail from './ImgWrapperDetail';
 import { useUploadedImg } from '../../../Context/ImgUploadContext';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { ref, getDownloadURL, uploadString } from 'firebase/storage';
 import { db, storage } from '../../../firebase';
 import { useAuth } from '../../../Context/AuthContext';
 import { arrayUnion, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid'
 import LoadingBox from '../../LoadingBox';
 import { useNavigate } from 'react-router-dom';
+
+
 
 const ImageDetailBox = styled.div`
     width: 480px;
@@ -43,7 +45,7 @@ const FormSection = styled.form`
 
 function ImageDetailSection() {
   const [showErr, setShowErr] = useState(false)
-  const [textValue, setTextValue] = useState()
+  const [textValue, setTextValue] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const upImg = useUploadedImg()
   const user = useAuth()
@@ -65,61 +67,36 @@ function ImageDetailSection() {
 
       try {
         const storageRef = ref(storage, displayName + '/' + generatePostId)
-        const uploadTask = uploadBytesResumable(storageRef, upImg)
-
-        uploadTask.on('state_changed', 
-        (snapshot) => {
-          // Observe state change events such as progress, pause, and resume
-          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload is ' + progress + '% done');
-          switch (snapshot.state) {
-            case 'paused':
-              console.log('Upload is paused');
-              break;
-            case 'running':
-              console.log('Upload is running');
-              break;
-            default:
-
-          }
-        }, 
-        (error) => {
-          // Handle unsuccessful uploads
-          setShowErr(true)
-          setIsLoading(false)
-        }, 
-        () => {
-          // Handle successful uploads on complete
-          // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-
+        uploadString(storageRef, upImg,'data_url').then((snapshot) => {
+          getDownloadURL(storageRef)
+          .then(async(url) => {
             // Adds post object on user post
             await updateDoc(postRef, generatePostId, {
-                postID: generatePostId,
-                imgURL: downloadURL,
-                description: textValue,
-                comments: '',
-                likes: [],
-                timestamp: serverTimestamp(),
+              postID: generatePostId,
+              imgURL: url,
+              description: textValue,
+              comments: [],
+              likes: [],
+              timestamp: serverTimestamp(),
             })
-            // adds postid to mainpage post
-            await updateDoc(mainPagePostRef, {
-              postID: arrayUnion({
-                generatePostId
-              })}
-            )
-            // after upload is done navigate home
-            navigate('/')
+          // adds postid to mainpage post
+          await updateDoc(mainPagePostRef, {
+            postID: arrayUnion({
+              generatePostId
+          })})
+          // after upload is done navigate home
+          navigate('/')
+          })
+          .catch((error) => {
+            setShowErr(true)
+            setIsLoading(false)
           });
-        }
-      );
+        });
     } catch(error) {
       setShowErr(true)
       setIsLoading(false)
     }
   }
-
 
   return (
     <>
@@ -141,6 +118,7 @@ function ImageDetailSection() {
               placeholder='Add description'
               onChange={handleOnChangeText}
               rows="4"
+              required
             />
             {
               showErr ?

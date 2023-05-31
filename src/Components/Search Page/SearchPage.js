@@ -4,7 +4,7 @@ import SearchNavBar from './SearchNavBar'
 import BottomNav from '../BottomNav'
 import {MdPersonSearch} from 'react-icons/md'
 import SearchUserBar from './SearchUserBar'
-import { collection, query, where, getDocs } from "firebase/firestore"
+import { collection, query, where, getDocs, doc, getDoc } from "firebase/firestore"
 import { db } from '../../firebase'
 
 
@@ -57,9 +57,37 @@ const SearchPage = () => {
   const [username, setUsername] = useState('')
   const [user, setUser] = useState(null)
   const [showError, setShowError] = useState(false)
+  const [userData, setUserData] = useState()
+  const [userPostData, setUserPostData] = useState()
+
+  const dataTest = {
+    data1: {
+      id: 1,
+      likes: 0,
+      time: {
+        nanoseconds: 235000000,
+        seconds: 1685512437
+      }
+    },
+    data2: {
+      id: 2,
+      likes: 0,
+      time: {
+        nanoseconds: 235000000,
+        seconds: 1685512437
+      }
+    },
+    data3: {
+      id: 3,
+      likes: 0,
+      time: {
+        nanoseconds: 235000000,
+        seconds: 1685512437
+      }
+    }
+  }
 
   const handleSearch = async() => {
-    console.log(username)
     const userRef = collection(db, 'users')
     const q = query(userRef, where('displayName','==', username))
 
@@ -82,10 +110,40 @@ const SearchPage = () => {
     
   }
 
+  const handleTest = async() => {
+    const postDataRef = doc(db,'userPost', 'Dv6cBEmfDiPdnsMso85Q8TU2ISQ2')
+    const userDataRef = doc(db, 'users','Dv6cBEmfDiPdnsMso85Q8TU2ISQ2')
+
+    const postSnap = await getDoc(postDataRef)
+    const userSnap = await getDoc(userDataRef)
+
+    if(postSnap.exists()) {
+      const postValue = postSnap.data()
+      setUserPostData(postValue)
+    } else {
+      console.log('data does not exist')
+    }
+
+    if(userSnap.exists()) {
+      const userValue = userSnap.data()
+      setUserData(userValue)
+    } else {
+      console.log('data does not exist')
+    }
+  }
+
+  const testMe = () => {
+    console.log(dataTest)
+  }
+
   return (
     <SearchBox>
       <SearchNavBar />
       <BottomNav />
+      <button onClick={handleTest}>Click Me</button>
+      <button onClick={e => console.log(userPostData)}>User Post</button>
+      <button onClick={e => console.log(userData)}>User Data</button>
+      <button onClick={testMe}>Test Me</button>
 
       <SearchInputBox>
         <SearchInput 

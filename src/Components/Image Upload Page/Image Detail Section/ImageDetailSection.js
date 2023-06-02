@@ -73,17 +73,25 @@ function ImageDetailSection() {
             // Adds post object on user post
             await updateDoc(postRef, generatePostId, {
               postID: generatePostId,
+              displayName: displayName,
+              userPhotoURL: user.currentUser.photoURL,
               imgURL: url,
               description: textValue,
-              comments: [],
+              comments: '',
               likes: [],
               timestamp: serverTimestamp(),
             })
           // adds postid to mainpage post
-          await updateDoc(mainPagePostRef, {
-            postID: arrayUnion({
-              generatePostId
-          })})
+          await updateDoc(mainPagePostRef, generatePostId, {
+              postID: generatePostId,
+              displayName: displayName,
+              userPhotoURL: user.currentUser.photoURL,
+              imgURL: url,
+              description: textValue,
+              comments: '',
+              likes: [],
+              timestamp: serverTimestamp(),
+          })
           // after upload is done navigate home
           navigate('/')
           })

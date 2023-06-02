@@ -18,7 +18,7 @@ const ProfileTop = styled.div`
     border-bottom: 1px solid rgba(229, 229, 229);
     box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
     background-color: white;
-    z-index: 1;
+    z-index: 3;
     .back-icon {
       scale: 2.5;
       cursor: pointer;
@@ -26,11 +26,11 @@ const ProfileTop = styled.div`
     }
 `
 
-function ImagePostTopBar() {
+function ImagePostTopBar({backFunction, userName}) {
   return (
     <ProfileTop>
-        <BiArrowBack className='back-icon' />
-        <h2>USER</h2> 
+        <BiArrowBack className='back-icon' onClick={backFunction}/>
+        <h2>{userName}</h2> 
     </ProfileTop>
   )
 }

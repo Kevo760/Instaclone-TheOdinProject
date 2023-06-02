@@ -6,6 +6,10 @@ import { signOut } from 'firebase/auth'
 import MainProfileTopBar from './MainProfileTopBar'
 import EditProfilePage from './EditProfilePage'
 import { useAuth } from '../../Context/AuthContext'
+import { doc, getDoc } from "firebase/firestore"
+import { db } from '../../firebase'
+import ImagePostMainUserModal from '../Image Post Modal/ImagePostMainUserModal'
+
 
 
 
@@ -94,63 +98,131 @@ const ProfileLogOutBtn = styled(ProfileFollowButton)`
 `
 
 function MainUserProfilePage() {
-  const [open, setOpen] = useState(false)
+  const [openEditPage, setOpenEditPage] = useState(false)
+  const [showCurrentPost, setShowCurrentPost] = useState(null)
+
+  const [userData, setUserData] = useState()
+  const [userPostData, setUserPostData] = useState()
+
   const auth = useAuth()
   const user = auth.currentUser
 
 
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
+  const handleOpen = () => setOpenEditPage(true)
+  const handleClose = () => setOpenEditPage(false)
+
+  const getData = async() => {
+    const postDataRef = doc(db,'userPost', 'Dv6cBEmfDiPdnsMso85Q8TU2ISQ2')
+    const userDataRef = doc(db, 'users','Dv6cBEmfDiPdnsMso85Q8TU2ISQ2')
+
+    const postSnap = await getDoc(postDataRef)
+    const userSnap = await getDoc(userDataRef)
+
+    if(postSnap.exists()) {
+      const postValue = postSnap.data()
+      // converts object data into array
+      const postValueArray = Object.entries(postValue)
+      // sorts the array by timestamp
+      const sortPostByTime = postValueArray.sort(function(x,y) {
+        return x[1].timestamp - y[1].timestamp
+      })
+      setUserPostData(sortPostByTime)
+    } else {
+      console.log('data does not exist')
+    }
+
+    if(userSnap.exists()) {
+      const userValue = userSnap.data()
+      setUserData(userValue)
+    } else {
+      console.log('data does not exist')
+    }
+  }
+
+  const test = (a) => {
+    console.log(a)
+    console.log('yo')
+  }
+
+  const handleCloseCurrentPost = () => {
+    setShowCurrentPost(null)
+  }
+
+  const handleOpenCurrentPost = (mainUserData) => {
+    setShowCurrentPost(<ImagePostMainUserModal backFunction={handleCloseCurrentPost} mainUserData={mainUserData}/>)
+    console.log('test')
+  }
+
+
+
+  const showPostGallery = userPostData ? userPostData.map(dataObject => 
+    <ProfilePostImage 
+    src={dataObject[1].imgURL} 
+    key={dataObject[1].postID} 
+    alt='user post image' 
+    onClick={e => handleOpenCurrentPost(dataObject[1])}
+    />) : null
+ 
+  
 
     return (
       <>
         {
-          open ?
+          openEditPage ?
           <EditProfilePage handleClose={handleClose} backFunction={handleClose}/>
           :
           <ProfileBox>
-          <MainProfileTopBar user={user.displayName} />
-          <BottomNav />
-          
-          <ProfileTopSection >
-            <CircleProfileLarge src={user.photoURL} alt='Profile Picture'/>
-  
-            <ProfileColumnTextBox>
-              <h3>1,000</h3>
-              <p>Post</p>
-            </ProfileColumnTextBox>
-  
-            <ProfileColumnTextBox>
-              <h3>2,000</h3>
-              <p>Followers</p>
-            </ProfileColumnTextBox>
-  
-            <ProfileColumnTextBox>
-              <h3>3,000</h3>
-              <p>Following</p>
-            </ProfileColumnTextBox>
-          </ProfileTopSection >
-  
-          <ProfileUserInfoSection>
-            <b>{user.displayName}</b>
-  
-            <p>
-            Twenty-five stars were neatly placed on the piece of paper. There was room for five more stars but they would be difficult ones to earn. It had taken years to earn the first twenty-five, and they were considered the "easy" ones.
-            </p>
-          </ProfileUserInfoSection>
-          
-    
-          <ProfileUnFollowButton onClick={handleOpen}>Edit Profile</ProfileUnFollowButton>
-          <ProfileLogOutBtn onClick={() => signOut(auth)}>Log Out</ProfileLogOutBtn>
-        
-          
-          <ProfileImagesSection>
+            <MainProfileTopBar user={user.displayName} />
+            <BottomNav />
             
-          </ProfileImagesSection>
-          
-      </ProfileBox>
+            <ProfileTopSection >
+              <CircleProfileLarge src={user.photoURL} alt='Profile Picture'/>
+    
+              <ProfileColumnTextBox>
+                <h3>1,000</h3>
+                <p>Post</p>
+              </ProfileColumnTextBox>
+    
+              <ProfileColumnTextBox>
+                <h3>2,000</h3>
+                <p>Followers</p>
+              </ProfileColumnTextBox>
+    
+              <ProfileColumnTextBox>
+                <h3>3,000</h3>
+                <p>Following</p>
+              </ProfileColumnTextBox>
+            </ProfileTopSection >
+    
+            <ProfileUserInfoSection>
+              <b>{user.displayName}</b>
+    
+              <p>
+              Twenty-five stars were neatly placed on the piece of paper. There was room for five more stars but they would be difficult ones to earn. It had taken years to earn the first twenty-five, and they were considered the "easy" ones.
+              </p>
+            </ProfileUserInfoSection>
+              <ProfileUnFollowButton onClick={handleOpen}>Edit Profile</ProfileUnFollowButton>
+              <ProfileLogOutBtn onClick={() => signOut(auth)}>Log Out</ProfileLogOutBtn>
+              <button onClick={getData}>Get Data</button>
+            <ProfileImagesSection>
+              {/* If showPostGallery exist showPostGallery */}
+              {
+                showPostGallery ?
+                showPostGallery
+                :
+                null
+              }
+            </ProfileImagesSection>
+        </ProfileBox>
         }
-      
+
+        {
+          showCurrentPost ?
+          showCurrentPost
+          :
+          null
+        }
+        
       </>
         
     )

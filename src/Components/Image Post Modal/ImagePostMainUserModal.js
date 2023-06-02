@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import styled from "styled-components"
 import PostBox from '../PostBox'
 import ImagePostTopBar from './ImagePostTopBar'
-
+import MainUserPostBox from './MainUserPostBox'
 
 const ImagePostBox = styled.div`
     margin: auto;
@@ -30,10 +30,9 @@ const ImagePostBoxModal = styled.div`
     left: 0;
     z-index: 2;
 `
+function ImagePostMainUserModal({backFunction, mainUserData}) {
 
-function ImagePostModal() {
-
-  // Hides scroll bar behind modal
+   // Hides scroll bar behind modal
   useEffect(() => {
     function hideOverflow() {
       document.body.style.overflow = 'hidden';
@@ -48,11 +47,11 @@ function ImagePostModal() {
   return (
     <ImagePostBoxModal>
       <ImagePostBox>
-        <ImagePostTopBar/>
-        <PostBox />
+        <ImagePostTopBar backFunction={backFunction}/>
+        <MainUserPostBox mainUserData={mainUserData}/>
       </ImagePostBox>
     </ImagePostBoxModal>
   )
 }
 
-export default ImagePostModal
+export default ImagePostMainUserModal

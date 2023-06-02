@@ -62,15 +62,15 @@ const SearchPage = () => {
 
   const dataTest = {
     data1: {
-      id: 1,
+      id: 2,
       likes: 0,
       time: {
-        nanoseconds: 235000000,
+        nanoseconds: 235000001,
         seconds: 1685512437
       }
     },
     data2: {
-      id: 2,
+      id: 1,
       likes: 0,
       time: {
         nanoseconds: 235000000,
@@ -81,7 +81,7 @@ const SearchPage = () => {
       id: 3,
       likes: 0,
       time: {
-        nanoseconds: 235000000,
+        nanoseconds: 2,
         seconds: 1685512437
       }
     }
@@ -134,6 +134,10 @@ const SearchPage = () => {
 
   const testMe = () => {
     console.log(dataTest)
+    const test = Object.entries(dataTest)
+    const timeTest = 1685512437000
+    const dateFormat = new Date(timeTest)
+    console.log(dateFormat)
   }
 
   return (

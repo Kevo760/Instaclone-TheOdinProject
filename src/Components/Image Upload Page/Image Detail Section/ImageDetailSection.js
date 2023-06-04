@@ -6,7 +6,7 @@ import { useUploadedImg } from '../../../Context/ImgUploadContext';
 import { ref, getDownloadURL, uploadString } from 'firebase/storage';
 import { db, storage } from '../../../firebase';
 import { useAuth } from '../../../Context/AuthContext';
-import { arrayUnion, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid'
 import LoadingBox from '../../LoadingBox';
 import { useNavigate } from 'react-router-dom';

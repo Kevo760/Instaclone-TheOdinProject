@@ -6,12 +6,9 @@ import { signOut } from 'firebase/auth'
 import MainProfileTopBar from './MainProfileTopBar'
 import EditProfilePage from './EditProfilePage'
 import { useAuth } from '../../Context/AuthContext'
-import { doc, getDoc } from "firebase/firestore"
+import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore"
 import { db } from '../../firebase'
 import ImagePostMainUserModal from '../Image Post Modal/ImagePostMainUserModal'
-
-
-
 
 const ProfileBox = styled.div`
     margin: 70px auto 40px auto;
@@ -124,7 +121,7 @@ function MainUserProfilePage() {
       const postValueArray = Object.entries(postValue)
       // sorts the array by timestamp
       const sortPostByTime = postValueArray.sort(function(x,y) {
-        return x[1].timestamp - y[1].timestamp
+        return y[1].timestamp - x[1].timestamp
       })
       setUserPostData(sortPostByTime)
     } else {
@@ -139,21 +136,13 @@ function MainUserProfilePage() {
     }
   }
 
-  const test = (a) => {
-    console.log(a)
-    console.log('yo')
-  }
-
   const handleCloseCurrentPost = () => {
     setShowCurrentPost(null)
   }
 
   const handleOpenCurrentPost = (mainUserData) => {
     setShowCurrentPost(<ImagePostMainUserModal backFunction={handleCloseCurrentPost} mainUserData={mainUserData}/>)
-    console.log('test')
   }
-
-
 
   const showPostGallery = userPostData ? userPostData.map(dataObject => 
     <ProfilePostImage 
@@ -162,8 +151,25 @@ function MainUserProfilePage() {
     alt='user post image' 
     onClick={e => handleOpenCurrentPost(dataObject[1])}
     />) : null
+
+    const handleLike = async() => {
+      const postID = '3807a05a-2484-4745-bcc8-5a2bc9c585ef'
+      try {
+        const mainRef = doc(db, 'mainPagePost', 'post')
+        const postRef = doc(db, 'userPost', user.uid)
+
+        await updateDoc(postRef, {
+          [postID + '.likes']: arrayUnion(user.uid)
+        })
+
+        await updateDoc(mainRef, {
+          [postID + '.likes']: arrayUnion(user.uid)
+        })
+      } catch(error) {
+        console.log(error)
+      }
+    }
  
-  
 
     return (
       <>
@@ -198,12 +204,13 @@ function MainUserProfilePage() {
               <b>{user.displayName}</b>
     
               <p>
-              Twenty-five stars were neatly placed on the piece of paper. There was room for five more stars but they would be difficult ones to earn. It had taken years to earn the first twenty-five, and they were considered the "easy" ones.
+                
               </p>
             </ProfileUserInfoSection>
               <ProfileUnFollowButton onClick={handleOpen}>Edit Profile</ProfileUnFollowButton>
               <ProfileLogOutBtn onClick={() => signOut(auth)}>Log Out</ProfileLogOutBtn>
               <button onClick={getData}>Get Data</button>
+              <button onClick={handleLike}>Handle Like</button>
             <ProfileImagesSection>
               {/* If showPostGallery exist showPostGallery */}
               {

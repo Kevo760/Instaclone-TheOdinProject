@@ -1,11 +1,10 @@
-import React from 'react'
-import styled from "styled-components";
-import bot from '../../images/bot.jpg'
-import profile from '../../images/profile.jpg'
+import React, { useEffect, useState } from 'react'
+import styled from "styled-components"
 import { CircleProfileSmall } from '../../Styled Components/CircleProfileImg'
 import {AiFillHeart, AiOutlineHeart} from 'react-icons/ai'
 import {FaRegComment} from 'react-icons/fa'
-import { useAuth } from '../../Context/AuthContext';
+import { useAuth } from '../../Context/AuthContext'
+import { checkIsLiked } from '../LikeFunctions'
 
 
 const Post = styled.div`
@@ -26,6 +25,7 @@ const Post = styled.div`
     }
     .red {
         fill: orangered;
+        cursor: auto;
     }
 `
 const ImgPost = styled.img`
@@ -82,11 +82,22 @@ const PostBottomSection = styled.div`
 
 function MainUserPostBox(prop) {
     const {mainUserData} = prop
+    const [like, setLike] = useState(false)
     const authUser = useAuth()
-    const displayCurrentUser = authUser.currentUser.displayName
-    
-    const like = false;
+    const whoLikedPost = mainUserData.likes
+    //if like is true use red heart if not use outline heart
     const isLiked = like ? <AiFillHeart className='like-icon red'/> : <AiOutlineHeart className='like-icon'/>
+
+
+    useEffect(() => {
+        const userLike = () => {
+            // Shows a true or false value of whoLikedPost array contains displayCurrentUser value
+            const likeValue = checkIsLiked(whoLikedPost, authUser.currentUser.uid)
+            setLike(likeValue)
+        }
+
+        userLike()
+    }, [])
 
   return (
     <Post>

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import styled from "styled-components"
-import PostBox from '../PostBox'
 import ImagePostTopBar from './ImagePostTopBar'
 import MainUserPostBox from './MainUserPostBox'
 

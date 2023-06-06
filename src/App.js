@@ -11,7 +11,6 @@ import { ImgPageHandlerProvider } from './Context/ImgPageHandlerContext';
 
 function App() {
   const currentUser = useAuth()
-  console.log(currentUser)
 
   const NotLoggedInProtection = ({children}) => {
     if(!currentUser) {

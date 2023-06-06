@@ -1,10 +1,13 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from "styled-components";
 import { CircleProfileSmall } from '../../Styled Components/CircleProfileImg'
 import ProfilePic from '../../images/profile.jpg'
 import UserComment from './UserComment'
 import CommentTopBar from './CommentTopBar'
 import CommentTextBar from './CommentTextBar'
+import { doc, getDocs, getDoc, query, where, collection } from 'firebase/firestore';
+import { db } from '../../firebase';
+
 
 const CommentModalBox = styled.div`
   position: fixed;
@@ -14,6 +17,7 @@ const CommentModalBox = styled.div`
   height: 100%; 
   overflow: auto; 
   background-color: white;
+  z-index: 3;
 `
 const CommentSection = styled.div`
     padding: 16px;
@@ -56,6 +60,29 @@ const CommentSectionOwnerPost = styled.div`
 
 function CommentModal() {
 
+  const [comData, setComData] = useState()
+
+  const getComments = async() => {
+    try {
+    const postDataRef = doc(db,'userPost', 'Dv6cBEmfDiPdnsMso85Q8TU2ISQ2')
+    const postSnap = await getDoc(postDataRef)
+
+    if(postSnap.exists()) {
+      const postValue = postSnap.data()
+      // converts object data into array
+      const postValueArray = Object.entries(postValue)
+      console.log(postValueArray[1][1])
+      setComData(postValueArray[1][1])
+    } else {
+      console.log('data does not exist')
+    }
+
+
+    } catch(error) {
+      console.log(error)
+    }
+    
+  }
 
   // Hides scroll bar behind modal
   useEffect(() => {
@@ -73,7 +100,7 @@ function CommentModal() {
     <CommentModalBox>
       <CommentSection >
         <CommentTopBar />
-
+        <button onClick={getComments}>Test</button>
           <CommentSectionOwnerPost>
             <CircleProfileSmall src={ProfilePic} alt='Profile picture' />
 

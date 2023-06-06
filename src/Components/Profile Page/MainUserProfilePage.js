@@ -6,9 +6,10 @@ import { signOut } from 'firebase/auth'
 import MainProfileTopBar from './MainProfileTopBar'
 import EditProfilePage from './EditProfilePage'
 import { useAuth } from '../../Context/AuthContext'
-import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore"
+import { doc, getDoc } from "firebase/firestore"
 import { db } from '../../firebase'
 import ImagePostMainUserModal from '../Image Post Modal/ImagePostMainUserModal'
+import { useCommentModal } from '../../Context/CommentModalContext'
 
 const ProfileBox = styled.div`
     margin: 70px auto 40px auto;
@@ -94,6 +95,13 @@ const ProfileLogOutBtn = styled(ProfileFollowButton)`
     }
 `
 
+const AbsoluteBtn = styled.button`
+      position: absolute;
+      width: 100px;
+      height: 50px;
+      z-index: 5;
+ `
+
 function MainUserProfilePage() {
   const [openEditPage, setOpenEditPage] = useState(false)
   const [showCurrentPost, setShowCurrentPost] = useState(null)
@@ -152,24 +160,7 @@ function MainUserProfilePage() {
     onClick={e => handleOpenCurrentPost(dataObject[1])}
     />) : null
 
-    const handleLike = async() => {
-      const postID = '3807a05a-2484-4745-bcc8-5a2bc9c585ef'
-      try {
-        const mainRef = doc(db, 'mainPagePost', 'post')
-        const postRef = doc(db, 'userPost', user.uid)
-
-        await updateDoc(postRef, {
-          [postID + '.likes']: arrayUnion(user.uid)
-        })
-
-        await updateDoc(mainRef, {
-          [postID + '.likes']: arrayUnion(user.uid)
-        })
-      } catch(error) {
-        console.log(error)
-      }
-    }
- 
+    const {handleShowCommentModal} = useCommentModal()
 
     return (
       <>
@@ -210,7 +201,7 @@ function MainUserProfilePage() {
               <ProfileUnFollowButton onClick={handleOpen}>Edit Profile</ProfileUnFollowButton>
               <ProfileLogOutBtn onClick={() => signOut(auth)}>Log Out</ProfileLogOutBtn>
               <button onClick={getData}>Get Data</button>
-              <button onClick={handleLike}>Handle Like</button>
+              <button onClick={handleShowCommentModal}>Show Comment</button>
             <ProfileImagesSection>
               {/* If showPostGallery exist showPostGallery */}
               {

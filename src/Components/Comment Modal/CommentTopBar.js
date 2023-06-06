@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from "styled-components";
 import {BiArrowBack} from 'react-icons/bi'
+import { useCommentModal } from '../../Context/CommentModalContext';
 
 const CommentTop = styled.div`
     display: flex;
@@ -26,9 +27,11 @@ const CommentTop = styled.div`
 
 
 function CommentTopBar() {
+  const {handleExitCommentModal} = useCommentModal()
+
   return (
     <CommentTop>
-        <BiArrowBack className='back-icon' />
+        <BiArrowBack className='back-icon' onClick={handleExitCommentModal}/>
         <h2>COMMENTS</h2>
     </CommentTop>
   )

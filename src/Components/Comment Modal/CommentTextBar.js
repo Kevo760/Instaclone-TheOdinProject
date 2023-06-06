@@ -1,9 +1,14 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from "styled-components";
 import { CircleProfileSmall } from '../../Styled Components/CircleProfileImg'
-import ProfilePic from '../../images/profile.jpg'
+import { useAuth } from '../../Context/AuthContext'
+import { addDoc, doc, serverTimestamp, setDoc, updateDoc} from "firebase/firestore"
+import { db } from '../../firebase'
+import { v4 as uuid } from 'uuid';
+import { useCommentModal } from '../../Context/CommentModalContext';
 
-const CommentBottom = styled.div`
+
+const CommentBottom = styled.form`
 position: fixed;
 bottom: 0;
 left: 0;
@@ -37,17 +42,76 @@ border-bottom: 1px solid rgb(52, 58, 64);
 `
 
 function CommentTextBar() {
+  const authUser = useAuth()
+  const [commentText, setCommentText] = useState('')
+  const [disableBtn, setDisableBtn] = useState(true)
+  const {postID} = useCommentModal()
+  
+  const handleSubmitComment = async(e) => {
+    e.preventDefault()
+    // Generates uniqueID and makes the uniqueID 8 characters
+    const uniqueID = uuid()
+    const smallUID = uniqueID.slice(0,8)
+
+    try {
+      const mainRef = doc(db, 'mainPagePost', 'post')
+      const postRef = doc(db, 'userPost', authUser.currentUser.uid)
+
+      await setDoc(mainRef, {
+        [postID]: {
+          'comments': {
+            [smallUID]: {
+              timeStamp: serverTimestamp(),
+              textValue: commentText,
+              userCommenting: authUser.currentUser.displayName,
+              userCommentingUID: authUser.currentUser.uid,
+              commentID: smallUID,
+              photoURL: authUser.currentUser.photoURL,
+            }
+          }
+        }
+      }, {merge: true})
+
+      await setDoc(postRef, {
+        [postID]: {
+          'comments': {
+            [smallUID]: {
+              timeStamp: serverTimestamp(),
+              textValue: commentText,
+              userCommenting: authUser.currentUser.displayName,
+              userCommentingUID: authUser.currentUser.uid,
+              commentID: smallUID,
+              photoURL: authUser.currentUser.photoURL,
+            }
+          }
+        }
+      }, {merge: true})
+      setCommentText('')
+    } catch(error) {
+      console.log(error)
+      setCommentText('')
+    }
+  }
+
+  // If comment text is an empty string disbale button
+  useEffect(() => {
+    if(commentText === '') {
+      setDisableBtn(true)
+    } else {
+      setDisableBtn(false)
+    }
+  }, [commentText])
 
   return (
-    <CommentBottom>
-        <CircleProfileSmall src={ProfilePic} alt='Main user picture'/>
+    <CommentBottom onSubmit={handleSubmitComment}>
+        <CircleProfileSmall src={authUser.currentUser.photoURL} alt='Main user picture'/>
         <CommentTextBarInput 
             placeholder='Add a comment'
             type='text'
+            id='comment-bar'
+            onChange={e => setCommentText(e.target.value)}
         />
-        <CommentTextBarButton>
-            Post
-        </CommentTextBarButton>
+        <CommentTextBarButton type='submit' disabled={disableBtn}>Post</CommentTextBarButton>
     </CommentBottom>
   )
 }

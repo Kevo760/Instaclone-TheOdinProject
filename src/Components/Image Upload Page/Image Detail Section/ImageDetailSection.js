@@ -63,7 +63,8 @@ function ImageDetailSection() {
     setIsLoading(true)
     const postRef = doc(db, 'userPost', userID)
     const mainPagePostRef = doc(db, 'mainPagePost', 'post')
-    const generatePostId = uuidv4()
+    const generateUID = uuidv4()
+    const generatePostId = generateUID.slice(0,8)
 
       try {
         const storageRef = ref(storage, displayName + '/' + generatePostId)

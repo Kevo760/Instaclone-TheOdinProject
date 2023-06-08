@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from "styled-components";
 import { CircleProfileSmall } from '../../Styled Components/CircleProfileImg'
 import { useAuth } from '../../Context/AuthContext'
-import { addDoc, doc, serverTimestamp, setDoc, updateDoc} from "firebase/firestore"
+import { doc, serverTimestamp, setDoc} from "firebase/firestore"
 import { db } from '../../firebase'
 import { v4 as uuid } from 'uuid';
 import { useCommentModal } from '../../Context/CommentModalContext';
@@ -61,7 +61,7 @@ function CommentTextBar() {
         [postID]: {
           'comments': {
             [smallUID]: {
-              timeStamp: serverTimestamp(),
+              timestamp: serverTimestamp(),
               textValue: commentText,
               userCommenting: authUser.currentUser.displayName,
               userCommentingUID: authUser.currentUser.uid,
@@ -76,7 +76,7 @@ function CommentTextBar() {
         [postID]: {
           'comments': {
             [smallUID]: {
-              timeStamp: serverTimestamp(),
+              timestamp: serverTimestamp(),
               textValue: commentText,
               userCommenting: authUser.currentUser.displayName,
               userCommentingUID: authUser.currentUser.uid,
@@ -110,6 +110,7 @@ function CommentTextBar() {
             type='text'
             id='comment-bar'
             onChange={e => setCommentText(e.target.value)}
+            autoComplete="off"
         />
         <CommentTextBarButton type='submit' disabled={disableBtn}>Post</CommentTextBarButton>
     </CommentBottom>

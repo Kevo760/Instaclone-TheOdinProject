@@ -46,7 +46,7 @@ function ImagePostMainUserModal({backFunction, mainUserData}) {
   return (
     <ImagePostBoxModal>
       <ImagePostBox>
-        <ImagePostTopBar backFunction={backFunction}/>
+        <ImagePostTopBar backFunction={backFunction} userName={mainUserData.displayName}/>
         <MainUserPostBox mainUserData={mainUserData}/>
       </ImagePostBox>
     </ImagePostBoxModal>

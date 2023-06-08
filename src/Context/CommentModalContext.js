@@ -9,19 +9,20 @@ export const useCommentModal = () => {
 
 export const CommentModalProvider = ({children}) => {
     const [showComments, setShowComments] = useState(false)
-    const [postID, setPostID] = useState()
+    const [postData, setPostData] = useState()
 
-    const handleShowCommentModal = (data) => {
+    const handleShowCommentModal = (postdata) => {
+        setPostData(postdata)
         setShowComments(true)
-        setPostID(data)
     }
 
     const handleExitCommentModal = () => {
         setShowComments(false)
+        setPostData(null)
     }
 
     return (
-        <CommentModalContext.Provider value={{showComments, postID, handleShowCommentModal, handleExitCommentModal}}>
+        <CommentModalContext.Provider value={{showComments, postData, handleShowCommentModal, handleExitCommentModal}}>
                 {
                     showComments ?
                     <CommentModal />

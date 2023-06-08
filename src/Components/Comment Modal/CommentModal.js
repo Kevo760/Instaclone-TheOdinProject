@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import styled from "styled-components";
 import { CircleProfileSmall } from '../../Styled Components/CircleProfileImg'
-import ProfilePic from '../../images/profile.jpg'
 import UserComment from './UserComment'
 import CommentTopBar from './CommentTopBar'
 import CommentTextBar from './CommentTextBar'
-import { doc, getDocs, getDoc, query, where, collection } from 'firebase/firestore';
-import { db } from '../../firebase';
+import { useCommentModal } from '../../Context/CommentModalContext';
 
 
 const CommentModalBox = styled.div`
@@ -18,6 +16,11 @@ const CommentModalBox = styled.div`
   overflow: auto; 
   background-color: white;
   z-index: 3;
+  .error-msg{
+    color: tomato;
+    font-weight: bold;
+    text-align: center;
+  }
 `
 const CommentSection = styled.div`
     padding: 16px;
@@ -59,30 +62,17 @@ const CommentSectionOwnerPost = styled.div`
 
 
 function CommentModal() {
+  const {postData} = useCommentModal()
+  
+  const serverTime = new Date(postData.timestamp.seconds * 1000)
+  const formatDate = serverTime.getMonth() + '/' + serverTime.getDate() + '/' + serverTime.getFullYear()
 
-  const [comData, setComData] = useState()
+  const commentsArray = Object.entries(postData.comments)
+  const sortComments = commentsArray.sort(function(x,y) {
+    return y[1].timestamp - x[1].timestamp
+  })
 
-  const getComments = async() => {
-    try {
-    const postDataRef = doc(db,'userPost', 'Dv6cBEmfDiPdnsMso85Q8TU2ISQ2')
-    const postSnap = await getDoc(postDataRef)
-
-    if(postSnap.exists()) {
-      const postValue = postSnap.data()
-      // converts object data into array
-      const postValueArray = Object.entries(postValue)
-      console.log(postValueArray[1][1])
-      setComData(postValueArray[1][1])
-    } else {
-      console.log('data does not exist')
-    }
-
-
-    } catch(error) {
-      console.log(error)
-    }
-    
-  }
+  const loadComments = sortComments ? sortComments.map(data => <UserComment key={data[1].commentID} userData={data[1]}/>) : null
 
   // Hides scroll bar behind modal
   useEffect(() => {
@@ -100,26 +90,22 @@ function CommentModal() {
     <CommentModalBox>
       <CommentSection >
         <CommentTopBar />
-        <button onClick={getComments}>Test</button>
           <CommentSectionOwnerPost>
-            <CircleProfileSmall src={ProfilePic} alt='Profile picture' />
+            <CircleProfileSmall src={postData.userPhotoURL} alt='Profile picture' />
 
             <CommentSectionOwnerDescription>
                 <p className='comment-section-owner'>
-                  Post Owner 
-                  <span className='comment-section-owner-date'> 12/1/2022</span>
+                  {postData.displayName}
+                  <span className='comment-section-owner-date'>{formatDate}</span>
                 </p>
                 <p className='comment-section-owner-description'>
-                  Nobody really understood Kevin. It wasn't that he was super strange or difficult. It was more that there wasn't enough there that anyone wanted to take the time to understand him. This was a shame as Kevin had many of the answers to the important questions most people who knew him had. It was even more of a shame that they'd refuse to listen even if Kevin offered to give them the answers. So, Kevin remained silent, misunderstood, and kept those important answers to life to himself.
-                  He stepped away from the mic.
+                  {postData.description}
                 </p>
             </CommentSectionOwnerDescription>
           </CommentSectionOwnerPost>
-
-          <UserComment />
-          <UserComment />
-          <UserComment />
-
+          {
+            loadComments
+          }
         <CommentTextBar />
       </CommentSection>
     </CommentModalBox>

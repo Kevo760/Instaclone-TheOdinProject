@@ -1,12 +1,11 @@
 import React from 'react'
 import styled from "styled-components";
 import { CircleProfileSmall } from '../../Styled Components/CircleProfileImg'
-import ProfilePic from '../../images/profile.jpg'
 
 const UserCommentDescription = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
     .user-comment-name {
         font-weight: bold;
         font-size: 14px;
@@ -28,7 +27,12 @@ const UserCommentPost = styled.div`
     padding-bottom: 16px;
     border-bottom: none;
 `
-function UserComment(userData) {
+function UserComment(props) {
+    const {userData} = props
+
+    const serverTime = new Date(userData.timestamp.seconds * 1000)
+    const formatDate = serverTime.getMonth() + '/' + serverTime.getDate() + '/' + serverTime.getFullYear()
+
   return (
     <UserCommentPost>
         <CircleProfileSmall src={userData.photoURL} alt='Profile picture' />
@@ -36,7 +40,7 @@ function UserComment(userData) {
         <UserCommentDescription>
             <p className='user-comment-name'>
                 {userData.userCommenting}
-                <span className='user-comment-date'>12/1/1990</span>
+                <span className='user-comment-date'>{formatDate}</span>
             </p>
 
             <p className='user-comment-description'>

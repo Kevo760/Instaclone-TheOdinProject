@@ -95,18 +95,10 @@ const ProfileLogOutBtn = styled(ProfileFollowButton)`
     }
 `
 
-const AbsoluteBtn = styled.button`
-      position: absolute;
-      width: 100px;
-      height: 50px;
-      z-index: 5;
- `
-
 function MainUserProfilePage() {
   const [openEditPage, setOpenEditPage] = useState(false)
   const [showCurrentPost, setShowCurrentPost] = useState(null)
 
-  const [userData, setUserData] = useState()
   const [userPostData, setUserPostData] = useState()
 
   const auth = useAuth()
@@ -118,11 +110,8 @@ function MainUserProfilePage() {
 
   const getData = async() => {
     const postDataRef = doc(db,'userPost', 'Dv6cBEmfDiPdnsMso85Q8TU2ISQ2')
-    const userDataRef = doc(db, 'users','Dv6cBEmfDiPdnsMso85Q8TU2ISQ2')
-
     const postSnap = await getDoc(postDataRef)
-    const userSnap = await getDoc(userDataRef)
-
+  
     if(postSnap.exists()) {
       const postValue = postSnap.data()
       // converts object data into array
@@ -136,22 +125,18 @@ function MainUserProfilePage() {
       console.log('data does not exist')
     }
 
-    if(userSnap.exists()) {
-      const userValue = userSnap.data()
-      setUserData(userValue)
-    } else {
-      console.log('data does not exist')
-    }
   }
 
+  // sets showCurrentPost to null
   const handleCloseCurrentPost = () => {
     setShowCurrentPost(null)
   }
-
+  // sets showCurrentPost to an Image Post Modal component and pass the data to it
   const handleOpenCurrentPost = (mainUserData) => {
     setShowCurrentPost(<ImagePostMainUserModal backFunction={handleCloseCurrentPost} mainUserData={mainUserData}/>)
   }
 
+  // shows main users post as a photo gallery with an onclick function to open the photo post
   const showPostGallery = userPostData ? userPostData.map(dataObject => 
     <ProfilePostImage 
     src={dataObject[1].imgURL} 

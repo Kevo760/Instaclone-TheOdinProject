@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import styled from "styled-components"
 import { CircleProfileSmall } from '../../Styled Components/CircleProfileImg'
 import {AiFillHeart, AiOutlineHeart} from 'react-icons/ai'
 import {FaRegComment} from 'react-icons/fa'
 import { useAuth } from '../../Context/AuthContext'
-import { checkIsLiked } from '../LikeFunctions'
+import { checkIsLiked, likePostHander } from '../LikeFunctions'
+import { useCommentModal } from '../../Context/CommentModalContext'
 
 
 const Post = styled.div`
@@ -26,6 +27,9 @@ const Post = styled.div`
     .red {
         fill: orangered;
         cursor: auto;
+    }
+    .view-comments {
+        cursor: pointer;
     }
 `
 const ImgPost = styled.img`
@@ -82,22 +86,18 @@ const PostBottomSection = styled.div`
 
 function MainUserPostBox(prop) {
     const {mainUserData} = prop
-    const [like, setLike] = useState(false)
+    const {handleShowCommentModal} = useCommentModal()
     const authUser = useAuth()
+
     const whoLikedPost = mainUserData.likes
+    const like = checkIsLiked(whoLikedPost, authUser.currentUser.uid)
     //if like is true use red heart if not use outline heart
-    const isLiked = like ? <AiFillHeart className='like-icon red'/> : <AiOutlineHeart className='like-icon'/>
+    const isLiked = like ? <AiFillHeart className='like-icon red'/> : <AiOutlineHeart className='like-icon' onClick={e => likePostHander(mainUserData.postID, authUser.currentUser.uid, authUser.currentUser.uid)}/>
 
+    const openComments = () => {
+        handleShowCommentModal(mainUserData)
+    }
 
-    useEffect(() => {
-        const userLike = () => {
-            // Shows a true or false value of whoLikedPost array contains displayCurrentUser value
-            const likeValue = checkIsLiked(whoLikedPost, authUser.currentUser.uid)
-            setLike(likeValue)
-        }
-
-        userLike()
-    }, [])
 
   return (
     <Post>
@@ -114,7 +114,7 @@ function MainUserPostBox(prop) {
         <PostBottomSection>
             <div className='like-comment-post'>
                 {isLiked}
-                <FaRegComment className='comment-icon'/>
+                <FaRegComment className='comment-icon' onClick={e => openComments()}/>
             </div>
 
             <div className='likes-total-post'>
@@ -126,7 +126,7 @@ function MainUserPostBox(prop) {
                 <p>{mainUserData.description}</p>
             </div>
 
-            <p>View all comments</p>
+            <span className='view-comments' onClick={e => openComments()}>View all comments</span>
         </PostBottomSection>
         
     </Post>

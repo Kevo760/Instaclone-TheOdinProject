@@ -166,6 +166,8 @@ function EditProfilePage({backFunction}) {
         }
         );
       }
+      setIsLoading(false)
+      backFunction()
       // if there is an error set error true and set loading to false
     }catch(error) {
       setIsLoading(false)

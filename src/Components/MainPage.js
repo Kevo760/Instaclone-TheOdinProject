@@ -4,7 +4,7 @@ import Logobar from './Logobar';
 import NotLoggedInTopNav from './NotLoggedInTopNav';
 import PostBox from './PostBox';
 import styled from "styled-components";
-import { AuthContext } from '../Context/AuthContext';
+import { useAuth } from '../Context/AuthContext';
 
 const MainPageBox = styled.div`
     display: flex;
@@ -13,21 +13,15 @@ const MainPageBox = styled.div`
 `
 
 function MainPage() {
-    const {currentUser} = useContext(AuthContext)
+    const authUser = useAuth()
     
-    const CurrentNavBar = currentUser ? <Logobar /> : <NotLoggedInTopNav />
-    const showBottomNav = currentUser ? <BottomNav /> : null
+    const CurrentNavBar = authUser ? <Logobar /> : <NotLoggedInTopNav />
+    const showBottomNav = authUser ? <BottomNav /> : null
 
   return (
     <MainPageBox>
         {CurrentNavBar}
         {showBottomNav}
-        <PostBox />
-        <PostBox />
-        <PostBox />
-        <PostBox />
-        <PostBox />
-
     </MainPageBox>
   )
 }

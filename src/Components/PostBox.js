@@ -5,6 +5,8 @@ import profile from '../images/profile.jpg'
 import { CircleProfileSmall } from '../Styled Components/CircleProfileImg'
 import {AiFillHeart, AiOutlineHeart} from 'react-icons/ai'
 import {FaRegComment} from 'react-icons/fa'
+import { useCommentModal } from '../Context/CommentModalContext';
+import { useAuth } from '../Context/AuthContext';
 
 
 const Post = styled.div`
@@ -25,6 +27,9 @@ const Post = styled.div`
     }
     .red {
         fill: orangered;
+    }
+    .view-comments {
+        cursor: pointer;
     }
 `
 const ImgPost = styled.img`
@@ -58,35 +63,42 @@ const PostBottomSection = styled.div`
 }
 `
 
-function PostBox() {
-    const like = true;
+function PostBox(prop) {
+    const {userData} = prop
+    const {handleShowCommentModal} = useCommentModal()
+    const authUser = useAuth()
 
+    const like = true;
     const isLiked = like ? <AiFillHeart className='like-icon red'/> : <AiOutlineHeart className='like-icon'/>
+
+    const openComments = () => {
+        handleShowCommentModal(userData)
+    }
 
   return (
     <Post>
         <PostTopBar>
-            <CircleProfileSmall src={profile}/>
-            <b>user</b>
+            <CircleProfileSmall src={userData.userPhotoURL}/>
+            <b>{userData.displayName}</b>
         </PostTopBar>
 
-        <ImgPost src={bot}/>
+        <ImgPost src={userData.imgURLt}/>
         <PostBottomSection>
             <div className='like-comment-post'>
                 {isLiked}
-                 <FaRegComment className='comment-icon'/>
+                 <FaRegComment className='comment-icon' onClick={e => openComments()}/>
             </div>
 
             <div className='likes-total-post'>
-                <b>100 Likes</b>
+                <b>{userData.comments.length} Likes</b>
             </div>
 
             <div className='user-comment-post'>
-                <b>Username</b> 
-                <p>User Comment</p>
+                <b>{userData.displayName}</b> 
+                <p>{userData.description}</p>
             </div>
 
-            <p>View all comments</p>
+            <span className='view-comments' onClick={e => openComments()}>View all comments</span>
         </PostBottomSection>
         
     </Post>

@@ -6,10 +6,8 @@ import { signOut } from 'firebase/auth'
 import MainProfileTopBar from './MainProfileTopBar'
 import EditProfilePage from './EditProfilePage'
 import { useAuth } from '../../Context/AuthContext'
-import { doc, getDoc } from "firebase/firestore"
-import { db } from '../../firebase'
 import ImagePostMainUserModal from '../Image Post Modal/ImagePostMainUserModal'
-import { useCommentModal } from '../../Context/CommentModalContext'
+import { useMainUserData } from '../../Context/MainUserDataContext'
 
 const ProfileBox = styled.div`
     margin: 70px auto 40px auto;
@@ -98,54 +96,32 @@ const ProfileLogOutBtn = styled(ProfileFollowButton)`
 function MainUserProfilePage() {
   const [openEditPage, setOpenEditPage] = useState(false)
   const [showCurrentPost, setShowCurrentPost] = useState(null)
-
-  const [userPostData, setUserPostData] = useState()
+  const { mainUserData, mainUserPostData} = useMainUserData()
+  console.log(mainUserPostData)
 
   const auth = useAuth()
   const user = auth.currentUser
-
-
+ 
   const handleOpen = () => setOpenEditPage(true)
   const handleClose = () => setOpenEditPage(false)
-
-  const getData = async() => {
-    const postDataRef = doc(db,'userPost', 'Dv6cBEmfDiPdnsMso85Q8TU2ISQ2')
-    const postSnap = await getDoc(postDataRef)
-  
-    if(postSnap.exists()) {
-      const postValue = postSnap.data()
-      // converts object data into array
-      const postValueArray = Object.entries(postValue)
-      // sorts the array by timestamp
-      const sortPostByTime = postValueArray.sort(function(x,y) {
-        return y[1].timestamp - x[1].timestamp
-      })
-      setUserPostData(sortPostByTime)
-    } else {
-      console.log('data does not exist')
-    }
-
-  }
 
   // sets showCurrentPost to null
   const handleCloseCurrentPost = () => {
     setShowCurrentPost(null)
   }
   // sets showCurrentPost to an Image Post Modal component and pass the data to it
-  const handleOpenCurrentPost = (mainUserData) => {
-    setShowCurrentPost(<ImagePostMainUserModal backFunction={handleCloseCurrentPost} mainUserData={mainUserData}/>)
+  const handleOpenCurrentPost = (userPostData) => {
+    setShowCurrentPost(<ImagePostMainUserModal backFunction={handleCloseCurrentPost} mainUserData={userPostData}/>)
   }
 
   // shows main users post as a photo gallery with an onclick function to open the photo post
-  const showPostGallery = userPostData ? userPostData.map(dataObject => 
+  const showPostGallery = mainUserPostData ? mainUserPostData.map(dataObject => 
     <ProfilePostImage 
     src={dataObject[1].imgURL} 
     key={dataObject[1].postID} 
     alt='user post image' 
     onClick={e => handleOpenCurrentPost(dataObject[1])}
     />) : null
-
-    const {handleShowCommentModal} = useCommentModal()
 
     return (
       <>
@@ -161,32 +137,57 @@ function MainUserProfilePage() {
               <CircleProfileLarge src={user.photoURL} alt='Profile Picture'/>
     
               <ProfileColumnTextBox>
-                <h3>1,000</h3>
+                <h3>
+                  {
+                    mainUserPostData ?
+                    mainUserPostData.length
+                    :
+                    null
+                  }
+                </h3>
                 <p>Post</p>
               </ProfileColumnTextBox>
     
               <ProfileColumnTextBox>
-                <h3>2,000</h3>
+                <h3>
+                  {
+                    mainUserData ?
+                    mainUserData.followers.length
+                    :
+                    null
+                  }
+                </h3>
                 <p>Followers</p>
               </ProfileColumnTextBox>
     
               <ProfileColumnTextBox>
-                <h3>3,000</h3>
+                <h3>
+                {
+                    mainUserData ?
+                    mainUserData.following.length
+                    :
+                    null
+                  }
+                </h3>
                 <p>Following</p>
               </ProfileColumnTextBox>
             </ProfileTopSection >
     
             <ProfileUserInfoSection>
+              {/* Display Name */}
               <b>{user.displayName}</b>
-    
+              {/* About Me */}
               <p>
-                
+                {
+                  mainUserData ?
+                  mainUserData.aboutMe
+                  :
+                  null
+                }
               </p>
             </ProfileUserInfoSection>
               <ProfileUnFollowButton onClick={handleOpen}>Edit Profile</ProfileUnFollowButton>
               <ProfileLogOutBtn onClick={() => signOut(auth)}>Log Out</ProfileLogOutBtn>
-              <button onClick={getData}>Get Data</button>
-              <button onClick={handleShowCommentModal}>Show Comment</button>
             <ProfileImagesSection>
               {/* If showPostGallery exist showPostGallery */}
               {

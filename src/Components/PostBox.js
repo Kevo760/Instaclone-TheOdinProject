@@ -7,6 +7,7 @@ import {AiFillHeart, AiOutlineHeart} from 'react-icons/ai'
 import {FaRegComment} from 'react-icons/fa'
 import { useCommentModal } from '../Context/CommentModalContext';
 import { useAuth } from '../Context/AuthContext';
+import { checkIsLiked, likePostHander } from './LikeFunctions';
 
 
 const Post = styled.div`
@@ -27,6 +28,7 @@ const Post = styled.div`
     }
     .red {
         fill: orangered;
+        cursor: auto;
     }
     .view-comments {
         cursor: pointer;
@@ -68,8 +70,9 @@ function PostBox(prop) {
     const {handleShowCommentModal} = useCommentModal()
     const authUser = useAuth()
 
-    const like = true;
-    const isLiked = like ? <AiFillHeart className='like-icon red'/> : <AiOutlineHeart className='like-icon'/>
+    const whoLikedPost = userData.likes
+    const like = checkIsLiked(whoLikedPost, authUser.currentUser.uid)
+    const isLiked = like ? <AiFillHeart className='like-icon red'/> : <AiOutlineHeart className='like-icon' onClick={e => likePostHander(userData.postID, userData.posterUID, authUser.currentUser.uid)}/>
 
     const openComments = () => {
         handleShowCommentModal(userData)
@@ -82,7 +85,7 @@ function PostBox(prop) {
             <b>{userData.displayName}</b>
         </PostTopBar>
 
-        <ImgPost src={userData.imgURLt}/>
+        <ImgPost src={userData.imgURL}/>
         <PostBottomSection>
             <div className='like-comment-post'>
                 {isLiked}
@@ -90,7 +93,7 @@ function PostBox(prop) {
             </div>
 
             <div className='likes-total-post'>
-                <b>{userData.comments.length} Likes</b>
+                <b>{userData.likes.length} Likes</b>
             </div>
 
             <div className='user-comment-post'>

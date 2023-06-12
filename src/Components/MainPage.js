@@ -1,10 +1,11 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import BottomNav from './BottomNav';
 import Logobar from './Logobar';
 import NotLoggedInTopNav from './NotLoggedInTopNav';
 import PostBox from './PostBox';
 import styled from "styled-components";
 import { useAuth } from '../Context/AuthContext';
+import { useMainPagePost } from '../Context/MainPagePostContext';
 
 const MainPageBox = styled.div`
     display: flex;
@@ -14,14 +15,19 @@ const MainPageBox = styled.div`
 
 function MainPage() {
     const authUser = useAuth()
+    const {mainPagePostData} = useMainPagePost()
     
     const CurrentNavBar = authUser ? <Logobar /> : <NotLoggedInTopNav />
     const showBottomNav = authUser ? <BottomNav /> : null
+
+    const showMainPagePosts = mainPagePostData ? mainPagePostData.map(dataObject => <PostBox userData={dataObject[1]} key={dataObject[1].postID} />) : null
 
   return (
     <MainPageBox>
         {CurrentNavBar}
         {showBottomNav}
+
+        {showMainPagePosts}
     </MainPageBox>
   )
 }

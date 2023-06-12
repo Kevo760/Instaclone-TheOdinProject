@@ -117,10 +117,10 @@ function MainUserProfilePage() {
   // shows main users post as a photo gallery with an onclick function to open the photo post
   const showPostGallery = mainUserPostData ? mainUserPostData.map(dataObject => 
     <ProfilePostImage 
-    src={dataObject[1].imgURL} 
-    key={dataObject[1].postID} 
-    alt='user post image' 
-    onClick={e => handleOpenCurrentPost(dataObject[1])}
+      src={dataObject[1].imgURL} 
+      key={dataObject[1].postID} 
+      alt='user post image' 
+      onClick={e => handleOpenCurrentPost(dataObject[1])}
     />) : null
 
     return (

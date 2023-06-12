@@ -7,10 +7,10 @@ export const checkIsLiked = (likeArray, userUID) => {
     return didUserLikePost
 }
 
-export const likePostHander = async(postID, posterUserID, likersUserID) => {
+export const likePostHander = async(postID, posterUID, likersUserID) => {
     try {
         const mainRef = doc(db, 'mainPagePost', 'post')
-        const postRef = doc(db, 'userPost', posterUserID)
+        const postRef = doc(db, 'userPost', posterUID)
 
         await updateDoc(postRef, {
           [postID + '.likes']: arrayUnion(likersUserID)

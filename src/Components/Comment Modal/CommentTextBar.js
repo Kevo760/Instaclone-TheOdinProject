@@ -45,7 +45,9 @@ function CommentTextBar() {
   const authUser = useAuth()
   const [commentText, setCommentText] = useState('')
   const [disableBtn, setDisableBtn] = useState(true)
-  const {postID} = useCommentModal()
+  const {postData} = useCommentModal()
+
+  const postID = postData.postID
   
   const handleSubmitComment = async(e) => {
     e.preventDefault()

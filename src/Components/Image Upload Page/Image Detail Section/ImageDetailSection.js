@@ -75,6 +75,7 @@ function ImageDetailSection() {
             await updateDoc(postRef, generatePostId, {
               postID: generatePostId,
               displayName: displayName,
+              posterUID: userID,
               userPhotoURL: user.currentUser.photoURL,
               imgURL: url,
               description: textValue,
@@ -86,6 +87,7 @@ function ImageDetailSection() {
           await updateDoc(mainPagePostRef, generatePostId, {
               postID: generatePostId,
               displayName: displayName,
+              posterUID: userID,
               userPhotoURL: user.currentUser.photoURL,
               imgURL: url,
               description: textValue,

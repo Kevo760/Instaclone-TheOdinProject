@@ -1,7 +1,5 @@
 import React from 'react'
 import styled from "styled-components";
-import bot from '../images/bot.jpg'
-import profile from '../images/profile.jpg'
 import { CircleProfileSmall } from '../Styled Components/CircleProfileImg'
 import {AiFillHeart, AiOutlineHeart} from 'react-icons/ai'
 import {FaRegComment} from 'react-icons/fa'
@@ -66,26 +64,26 @@ const PostBottomSection = styled.div`
 `
 
 function PostBox(prop) {
-    const {userData} = prop
+    const {postData} = prop
     const {handleShowCommentModal} = useCommentModal()
     const authUser = useAuth()
 
-    const whoLikedPost = userData.likes
+    const whoLikedPost = postData.likes
     const like = checkIsLiked(whoLikedPost, authUser.currentUser.uid)
-    const isLiked = like ? <AiFillHeart className='like-icon red'/> : <AiOutlineHeart className='like-icon' onClick={e => likePostHander(userData.postID, userData.posterUID, authUser.currentUser.uid)}/>
+    const isLiked = like ? <AiFillHeart className='like-icon red'/> : <AiOutlineHeart className='like-icon' onClick={e => likePostHander(postData.postID, postData.posterUID, authUser.currentUser.uid)}/>
 
     const openComments = () => {
-        handleShowCommentModal(userData)
+        handleShowCommentModal(postData)
     }
 
   return (
     <Post>
         <PostTopBar>
-            <CircleProfileSmall src={userData.userPhotoURL}/>
-            <b>{userData.displayName}</b>
+            <CircleProfileSmall src={postData.userPhotoURL}/>
+            <b>{postData.displayName}</b>
         </PostTopBar>
 
-        <ImgPost src={userData.imgURL}/>
+        <ImgPost src={postData.imgURL}/>
         <PostBottomSection>
             <div className='like-comment-post'>
                 {isLiked}
@@ -93,12 +91,12 @@ function PostBox(prop) {
             </div>
 
             <div className='likes-total-post'>
-                <b>{userData.likes.length} Likes</b>
+                <b>{postData.likes.length} Likes</b>
             </div>
 
             <div className='user-comment-post'>
-                <b>{userData.displayName}</b> 
-                <p>{userData.description}</p>
+                <b>{postData.displayName}</b> 
+                <p>{postData.description}</p>
             </div>
 
             <span className='view-comments' onClick={e => openComments()}>View all comments</span>

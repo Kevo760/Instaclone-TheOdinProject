@@ -29,7 +29,7 @@ const ImagePostBoxModal = styled.div`
     left: 0;
     z-index: 2;
 `
-function ImagePostMainUserModal({backFunction, mainUserData}) {
+function ImagePostMainUserModal({backFunction, mainUserPost}) {
 
    // Hides scroll bar behind modal
   useEffect(() => {
@@ -46,8 +46,8 @@ function ImagePostMainUserModal({backFunction, mainUserData}) {
   return (
     <ImagePostBoxModal>
       <ImagePostBox>
-        <ImagePostTopBar backFunction={backFunction} userName={mainUserData.displayName}/>
-        <MainUserPostBox mainUserData={mainUserData}/>
+        <ImagePostTopBar backFunction={backFunction} userName={mainUserPost.displayName}/>
+        <MainUserPostBox mainUserPost={mainUserPost} closePostModal={backFunction}/>
       </ImagePostBox>
     </ImagePostBoxModal>
   )

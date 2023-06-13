@@ -97,7 +97,6 @@ function MainUserProfilePage() {
   const [openEditPage, setOpenEditPage] = useState(false)
   const [showCurrentPost, setShowCurrentPost] = useState(null)
   const { mainUserData, mainUserPostData} = useMainUserData()
-  console.log(mainUserPostData)
 
   const auth = useAuth()
   const user = auth.currentUser
@@ -111,7 +110,7 @@ function MainUserProfilePage() {
   }
   // sets showCurrentPost to an Image Post Modal component and pass the data to it
   const handleOpenCurrentPost = (userPostData) => {
-    setShowCurrentPost(<ImagePostMainUserModal backFunction={handleCloseCurrentPost} mainUserData={userPostData}/>)
+    setShowCurrentPost(<ImagePostMainUserModal backFunction={handleCloseCurrentPost} mainUserPost={userPostData}/>)
   }
 
   // shows main users post as a photo gallery with an onclick function to open the photo post

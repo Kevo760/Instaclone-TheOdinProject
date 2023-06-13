@@ -44,8 +44,9 @@ border-bottom: 1px solid rgb(52, 58, 64);
 function CommentTextBar() {
   const authUser = useAuth()
   const [commentText, setCommentText] = useState('')
+  const [placeholderText, setPlaceholderText] = useState('Add a Comment')
   const [disableBtn, setDisableBtn] = useState(true)
-  const {postData} = useCommentModal()
+  const {postData, handleExitCommentModal} = useCommentModal()
 
   const postID = postData.postID
   
@@ -57,7 +58,7 @@ function CommentTextBar() {
 
     try {
       const mainRef = doc(db, 'mainPagePost', 'post')
-      const postRef = doc(db, 'userPost', authUser.currentUser.uid)
+      const postRef = doc(db, 'userPost', postData.posterUID)
 
       await setDoc(mainRef, {
         [postID]: {
@@ -89,9 +90,10 @@ function CommentTextBar() {
         }
       }, {merge: true})
       setCommentText('')
+      handleExitCommentModal()
     } catch(error) {
-      console.log(error)
       setCommentText('')
+      setPlaceholderText('SOMETHING WENT WRONG TRY AGAIN!')
     }
   }
 
@@ -108,11 +110,11 @@ function CommentTextBar() {
     <CommentBottom onSubmit={handleSubmitComment}>
         <CircleProfileSmall src={authUser.currentUser.photoURL} alt='Main user picture'/>
         <CommentTextBarInput 
-            placeholder='Add a comment'
             type='text'
             id='comment-bar'
             onChange={e => setCommentText(e.target.value)}
             autoComplete="off"
+            placeholder={placeholderText}
         />
         <CommentTextBarButton type='submit' disabled={disableBtn}>Post</CommentTextBarButton>
     </CommentBottom>

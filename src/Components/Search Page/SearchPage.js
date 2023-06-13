@@ -4,7 +4,7 @@ import SearchNavBar from './SearchNavBar'
 import BottomNav from '../BottomNav'
 import {MdPersonSearch} from 'react-icons/md'
 import SearchUserBar from './SearchUserBar'
-import { collection, query, where, getDocs, doc, getDoc } from "firebase/firestore"
+import { collection, query, where, getDocs, doc, getDoc, updateDoc, deleteField } from "firebase/firestore"
 import { db } from '../../firebase'
 
 
@@ -110,44 +110,10 @@ const SearchPage = () => {
     
   }
 
-  const handleTest = async() => {
-    const postDataRef = doc(db,'userPost', 'Dv6cBEmfDiPdnsMso85Q8TU2ISQ2')
-    const userDataRef = doc(db, 'users','Dv6cBEmfDiPdnsMso85Q8TU2ISQ2')
-
-    const postSnap = await getDoc(postDataRef)
-    const userSnap = await getDoc(userDataRef)
-
-    if(postSnap.exists()) {
-      const postValue = postSnap.data()
-      setUserPostData(postValue)
-    } else {
-      console.log('data does not exist')
-    }
-
-    if(userSnap.exists()) {
-      const userValue = userSnap.data()
-      setUserData(userValue)
-    } else {
-      console.log('data does not exist')
-    }
-  }
-
-  const testMe = () => {
-    console.log(dataTest)
-    const test = Object.entries(dataTest)
-    const timeTest = 1685512437000
-    const dateFormat = new Date(timeTest)
-    console.log(dateFormat)
-  }
-
   return (
     <SearchBox>
       <SearchNavBar />
       <BottomNav />
-      <button onClick={handleTest}>Click Me</button>
-      <button onClick={e => console.log(userPostData)}>User Post</button>
-      <button onClick={e => console.log(userData)}>User Data</button>
-      <button onClick={testMe}>Test Me</button>
 
       <SearchInputBox>
         <SearchInput 

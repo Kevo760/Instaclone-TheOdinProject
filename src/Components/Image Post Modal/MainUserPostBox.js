@@ -6,6 +6,8 @@ import {FaRegComment} from 'react-icons/fa'
 import { useAuth } from '../../Context/AuthContext'
 import { checkIsLiked, likePostHander } from '../LikeFunctions'
 import { useCommentModal } from '../../Context/CommentModalContext'
+import { db } from '../../firebase'
+import { deleteField, doc, updateDoc } from 'firebase/firestore'
 
 
 const Post = styled.div`
@@ -85,32 +87,50 @@ const PostBottomSection = styled.div`
 `
 
 function MainUserPostBox(prop) {
-    const {mainUserData} = prop
+    const {mainUserPost, closePostModal} = prop
     const {handleShowCommentModal} = useCommentModal()
     const authUser = useAuth()
-
-    const whoLikedPost = mainUserData.likes
+    // grab user like array and pass it to whoLikedPost
+    const whoLikedPost = mainUserPost.likes
     const like = checkIsLiked(whoLikedPost, authUser.currentUser.uid)
     //if like is true use red heart if not use outline heart
-    const isLiked = like ? <AiFillHeart className='like-icon red'/> : <AiOutlineHeart className='like-icon' onClick={e => likePostHander(mainUserData.postID, authUser.currentUser.uid, authUser.currentUser.uid)}/>
-
+    const isLiked = like ? <AiFillHeart className='like-icon red'/> : <AiOutlineHeart className='like-icon' onClick={e => likePostHander(mainUserPost.postID, authUser.currentUser.uid, authUser.currentUser.uid)}/>
+    // Passes mainUserPost data to commentModal
     const openComments = () => {
-        handleShowCommentModal(mainUserData)
+        handleShowCommentModal(mainUserPost)
     }
+    // Deletes post by using postID from userPost and mainPagePost and close modal after
+    const handleDeletePost = async() => {
+        const postRef = doc(db, 'userPost', authUser.currentUser.uid)
+        const mainRef = doc(db, 'mainPagePost', 'post')
 
+        try {
+            await updateDoc(postRef, {
+                [mainUserPost.postID]: deleteField()
+            })
+
+            await updateDoc(mainRef, {
+                [mainUserPost.postID]: deleteField()
+            })
+            closePostModal()
+        // If error close modal
+        } catch(error) {
+            closePostModal()
+        }
+    }
 
   return (
     <Post>
         <PostTopBar>
             <div className='user-top-section'>
-                <CircleProfileSmall src={mainUserData.userPhotoURL}/>
-                <b>{mainUserData.displayName}</b>
+                <CircleProfileSmall src={mainUserPost.userPhotoURL}/>
+                <b>{mainUserPost.displayName}</b>
             </div>
 
-            <button>Delete Post</button>
+            <button onClick={handleDeletePost}>Delete Post</button>
         </PostTopBar>
 
-        <ImgPost src={mainUserData.imgURL}/>
+        <ImgPost src={mainUserPost.imgURL}/>
         <PostBottomSection>
             <div className='like-comment-post'>
                 {isLiked}
@@ -118,12 +138,12 @@ function MainUserPostBox(prop) {
             </div>
 
             <div className='likes-total-post'>
-                <b>{mainUserData.comments.length} Likes</b>
+                <b>{mainUserPost.likes.length} Likes</b>
             </div>
 
             <div className='user-comment-post'>
-                <b>{mainUserData.displayName}</b> 
-                <p>{mainUserData.description}</p>
+                <b>{mainUserPost.displayName}</b> 
+                <p>{mainUserPost.description}</p>
             </div>
 
             <span className='view-comments' onClick={e => openComments()}>View all comments</span>

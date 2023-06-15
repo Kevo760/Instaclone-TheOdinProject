@@ -95,7 +95,7 @@ const ProfileLogOutBtn = styled(ProfileFollowButton)`
 
 function MainUserProfilePage() {
   const [openEditPage, setOpenEditPage] = useState(false)
-  const [showCurrentPost, setShowCurrentPost] = useState(null)
+  const [showCurrentPost, setShowCurrentPost] = useState()
   const { mainUserData, mainUserPostData} = useMainUserData()
 
   const auth = useAuth()
@@ -136,37 +136,25 @@ function MainUserProfilePage() {
               <CircleProfileLarge src={user.photoURL} alt='Profile Picture'/>
     
               <ProfileColumnTextBox>
+                {/* shows how many post based on mainUserPostData */}
                 <h3>
-                  {
-                    mainUserPostData ?
-                    mainUserPostData.length
-                    :
-                    null
-                  }
+                  {mainUserPostData.length}
                 </h3>
                 <p>Post</p>
               </ProfileColumnTextBox>
     
               <ProfileColumnTextBox>
+                {/* Displays total followers */}
                 <h3>
-                  {
-                    mainUserData ?
-                    mainUserData.followers.length
-                    :
-                    null
-                  }
+                  {mainUserData.followers.length}
                 </h3>
                 <p>Followers</p>
               </ProfileColumnTextBox>
     
               <ProfileColumnTextBox>
+                {/* Displays total following */}
                 <h3>
-                {
-                    mainUserData ?
-                    mainUserData.following.length
-                    :
-                    null
-                  }
+                  {mainUserData.following.length}
                 </h3>
                 <p>Following</p>
               </ProfileColumnTextBox>
@@ -177,12 +165,7 @@ function MainUserProfilePage() {
               <b>{user.displayName}</b>
               {/* About Me */}
               <p>
-                {
-                  mainUserData ?
-                  mainUserData.aboutMe
-                  :
-                  null
-                }
+                {mainUserData.aboutMe}
               </p>
             </ProfileUserInfoSection>
               <ProfileUnFollowButton onClick={handleOpen}>Edit Profile</ProfileUnFollowButton>

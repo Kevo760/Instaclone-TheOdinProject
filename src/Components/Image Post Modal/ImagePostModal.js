@@ -31,7 +31,7 @@ const ImagePostBoxModal = styled.div`
     z-index: 2;
 `
 
-function ImagePostModal() {
+function ImagePostModal({backFunction, post}) {
 
   // Hides scroll bar behind modal
   useEffect(() => {
@@ -48,8 +48,8 @@ function ImagePostModal() {
   return (
     <ImagePostBoxModal>
       <ImagePostBox>
-        <ImagePostTopBar/>
-        <PostBox />
+        <ImagePostTopBar backFunction={backFunction}/>
+        <PostBox postData={post}/>
       </ImagePostBox>
     </ImagePostBoxModal>
   )

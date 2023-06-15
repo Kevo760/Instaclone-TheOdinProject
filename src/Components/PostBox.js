@@ -85,11 +85,15 @@ function PostBox(prop) {
 
         <ImgPost src={postData.imgURL}/>
         <PostBottomSection>
-            <div className='like-comment-post'>
-                {isLiked}
-                 <FaRegComment className='comment-icon' onClick={e => openComments()}/>
-            </div>
-
+            {
+                authUser ?
+                <div className='like-comment-post'>
+                    {isLiked}
+                    <FaRegComment className='comment-icon' onClick={e => openComments()}/>
+                </div>
+                :
+                null
+            }
             <div className='likes-total-post'>
                 <b>{postData.likes.length} Likes</b>
             </div>

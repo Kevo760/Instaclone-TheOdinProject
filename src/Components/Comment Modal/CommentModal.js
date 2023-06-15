@@ -5,6 +5,7 @@ import UserComment from './UserComment'
 import CommentTopBar from './CommentTopBar'
 import CommentTextBar from './CommentTextBar'
 import { useCommentModal } from '../../Context/CommentModalContext';
+import { useAuth } from '../../Context/AuthContext';
 
 
 const CommentModalBox = styled.div`
@@ -63,6 +64,7 @@ const CommentSectionOwnerPost = styled.div`
 
 function CommentModal() {
   const {postData} = useCommentModal()
+  const authUser = useAuth()
   
   const serverTime = new Date(postData.timestamp.seconds * 1000)
   const formatDate = serverTime.getMonth() + '/' + serverTime.getDate() + '/' + serverTime.getFullYear()
@@ -103,10 +105,17 @@ function CommentModal() {
                 </p>
             </CommentSectionOwnerDescription>
           </CommentSectionOwnerPost>
+          {/* Load comments */}
           {
             loadComments
           }
-        <CommentTextBar />
+          {/* If authUser show text bar so your can add comments */}
+          {
+            authUser ?
+            <CommentTextBar />
+            :
+            null
+          }
       </CommentSection>
     </CommentModalBox>
   )

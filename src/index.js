@@ -6,6 +6,7 @@ import { AuthContextProvider } from './Context/AuthContext';
 import { CommentModalProvider } from './Context/CommentModalContext';
 import { MainUserDataProvider } from './Context/MainUserDataContext';
 import { MainPagePostProvier } from './Context/MainPagePostContext';
+import { UserProfileProvider } from './Context/UserProfileContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -13,9 +14,11 @@ root.render(
     <CommentModalProvider>
       <MainUserDataProvider>
         <MainPagePostProvier>
-          <React.StrictMode>
-            <App />
-          </React.StrictMode>
+          <UserProfileProvider>
+            <React.StrictMode>
+              <App />
+            </React.StrictMode>
+          </UserProfileProvider>
         </MainPagePostProvier>
       </MainUserDataProvider>
     </CommentModalProvider>

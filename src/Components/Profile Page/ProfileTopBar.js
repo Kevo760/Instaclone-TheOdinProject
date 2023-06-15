@@ -25,11 +25,10 @@ const ProfileTop = styled.div`
     } 
 `
 
-function ProfileTopBar({backClickFunction}) {
+function ProfileTopBar({displayName}) {
   return (
     <ProfileTop>
-        <BiArrowBack className='back-icon' onClick={backClickFunction}/>
-        <h2>USER</h2> 
+        <h2>{displayName}</h2> 
     </ProfileTop>
   )
 }

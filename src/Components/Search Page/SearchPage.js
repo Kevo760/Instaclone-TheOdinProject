@@ -4,8 +4,10 @@ import SearchNavBar from './SearchNavBar'
 import BottomNav from '../BottomNav'
 import {MdPersonSearch} from 'react-icons/md'
 import SearchUserBar from './SearchUserBar'
-import { collection, query, where, getDocs, doc, getDoc, updateDoc, deleteField } from "firebase/firestore"
+import { collection, query, where, getDocs, doc, getDoc, updateDoc, deleteField, onSnapshot } from "firebase/firestore"
 import { db } from '../../firebase'
+import { useNavigate } from 'react-router-dom'
+import { useUserProfile } from '../../Context/UserProfileContext'
 
 
 const SearchBox = styled.div`
@@ -22,6 +24,12 @@ const SearchBox = styled.div`
       font-weight: bold;
       justify-content: center;
       display: flex;
+    }
+    .test-button {
+      position: absolute;
+      z-index: 3;
+      width: 100px;
+      height: 50px;
     }
 `
 
@@ -57,35 +65,14 @@ const SearchPage = () => {
   const [username, setUsername] = useState('')
   const [user, setUser] = useState(null)
   const [showError, setShowError] = useState(false)
-  const [userData, setUserData] = useState()
-  const [userPostData, setUserPostData] = useState()
+  const navigate = useNavigate()
+  const {handleUserProfileID} = useUserProfile()
 
-  const dataTest = {
-    data1: {
-      id: 2,
-      likes: 0,
-      time: {
-        nanoseconds: 235000001,
-        seconds: 1685512437
-      }
-    },
-    data2: {
-      id: 1,
-      likes: 0,
-      time: {
-        nanoseconds: 235000000,
-        seconds: 1685512437
-      }
-    },
-    data3: {
-      id: 3,
-      likes: 0,
-      time: {
-        nanoseconds: 2,
-        seconds: 1685512437
-      }
-    }
-  }
+  const [userPost, setUserPost] = useState()
+  const [userData, setUserData] = useState()
+
+  const userProfileID = 'Dv6cBEmfDiPdnsMso85Q8TU2ISQ2'
+  
 
   const handleSearch = async() => {
     const userRef = collection(db, 'users')
@@ -110,10 +97,43 @@ const SearchPage = () => {
     
   }
 
+  const test = () => {
+    const getUserData = () => {
+      const unsub = onSnapshot(doc(db, 'userPost', userProfileID), (doc) => {
+        // converts object data into array
+        const postValue = doc.data()
+        const postValueArray = Object.entries(postValue)
+        // sorts the array by newest first
+        const sortPostByTime = postValueArray.sort(function(x,y) {
+        return y[1].timestamp - x[1].timestamp })
+        setUserPost(sortPostByTime)
+      })
+
+      const unsub2 = onSnapshot(doc(db, 'users', userProfileID), (doc) => {
+        const userDoc = doc.data()
+        setUserData(userDoc)
+      })
+
+      return () => {
+        unsub()
+        unsub2()
+      }
+    }
+
+    getUserData()
+  }
+
+  const testo = () => {
+    handleUserProfileID(userProfileID)
+    navigate('/userprofile')
+  }
+
   return (
     <SearchBox>
       <SearchNavBar />
       <BottomNav />
+        <button className='test-button' onClick={test}>Find User</button>
+        <button className='test-button' onClick={testo} style={{'marginTop': '100px'}}>Test2</button>
 
       <SearchInputBox>
         <SearchInput 

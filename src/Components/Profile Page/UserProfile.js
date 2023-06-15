@@ -1,11 +1,14 @@
-import React from 'react'
+import React, {useEffect, useState}from 'react'
 import styled from "styled-components"
 import { CircleProfileLarge } from '../../Styled Components/CircleProfileImg'
 import ProfileTopBar from './ProfileTopBar'
-import ProfilePic from '../../images/profile.jpg'
-import supra from '../../images/supra.jpg'
-import sti from '../../images/sti.jpg'
 import BottomNav from '../BottomNav'
+import { useAuth } from '../../Context/AuthContext'
+import { useUserProfile } from '../../Context/UserProfileContext'
+import { doc, onSnapshot } from 'firebase/firestore'
+import { db } from '../../firebase'
+import ImagePostModal from '../Image Post Modal/ImagePostModal'
+import LoadingBox from '../LoadingBox'
 
 
 const ProfileBox = styled.div`
@@ -86,75 +89,127 @@ const ProfileUnFollowButton = styled(ProfileFollowButton)`
 `
 
 function UserProfile() {
-  const AuthUser = true;
-  const follow = false;
-  const showFollowing = !follow ? <ProfileFollowButton>Follow</ProfileFollowButton> : <ProfileUnFollowButton>Unfollow</ProfileUnFollowButton>;
+  const AuthUser = useAuth()
+  const {userProfileID} = useUserProfile()
+  const [userPost, setUserPost] = useState()
+  const [userData, setUserData] = useState()
+  const [showCurrentPost, setShowCurrentPost] = useState()
+  console.log(userData)
+  console.log(userPost)
+
+  const follow = false
+  const showFollowing = !follow ? <ProfileFollowButton>Follow</ProfileFollowButton> : <ProfileUnFollowButton>Unfollow</ProfileUnFollowButton>
+
+  const showPostGallery = userPost ? userPost.map(dataObject =>
+    <ProfilePostImage
+      src={dataObject[1].imgURL} 
+      key={dataObject[1].postID} 
+      alt='user post image' 
+      onClick={e => handleOpenCurrentPost(dataObject[1])}
+    />) : null
+
+  // sets showCurrentPost to null
+  const handleCloseCurrentPost = () => {
+    setShowCurrentPost(null)
+  }
+  // sets showCurrentPost to an Image Post Modal component and pass the data to it
+  const handleOpenCurrentPost = (userPostData) => {
+    setShowCurrentPost(<ImagePostModal post={userPostData} backFunction={handleCloseCurrentPost} />)
+  }
+
+  useEffect(() => {
+    console.log('rerender')
+    const getUserData = () => {
+      try {
+        const unsub = onSnapshot(doc(db, 'userPost', userProfileID), (doc) => {
+          // converts object data into array
+          const postValue = doc.data()
+          const postValueArray = Object.entries(postValue)
+          // sorts the array by newest first
+          const sortPostByTime = postValueArray.sort(function(x,y) {
+          return y[1].timestamp - x[1].timestamp })
+          setUserPost(sortPostByTime)
+        })
+  
+        const unsub2 = onSnapshot(doc(db, 'users', userProfileID), (doc) => {
+          const userDoc = doc.data()
+          setUserData(userDoc)
+        })
+        return () => {
+          unsub()
+          unsub2()
+        }
+      } catch(error) {
+        console.log(error)
+      }
+      
+    }
+    
+    getUserData()
+  }, [userProfileID])
 
   return (
+    <>
+    {
+      !userPost && !userData ?
+      <LoadingBox />
+      :
       <ProfileBox>
-        <ProfileTopBar />
+        <ProfileTopBar displayName={userData.displayName}/>
         <BottomNav />
 
         <ProfileTopSection >
-          <CircleProfileLarge src={ProfilePic} alt='Profile Picture'/>
+          <CircleProfileLarge src={userData.photoURL} alt='Profile Picture'/>
 
           <ProfileColumnTextBox>
-            <h3>1,000</h3>
+            {/* Shows how many post the user has */}
+            <h3>
+              {userPost.length}
+            </h3>
             <p>Post</p>
           </ProfileColumnTextBox>
 
           <ProfileColumnTextBox>
-            <h3>2,000</h3>
+            {/* Shows how many followers user has */}
+            <h3>{userData.followers.length}</h3>
             <p>Followers</p>
           </ProfileColumnTextBox>
 
           <ProfileColumnTextBox>
-            <h3>3,000</h3>
+            {/* Shows how many user is following */}
+            <h3>{userData.following.length}</h3>
             <p>Following</p>
           </ProfileColumnTextBox>
         </ProfileTopSection >
 
         <ProfileUserInfoSection>
-          <b>Username</b>
-
-          <p>
-          Twenty-five stars were neatly placed on the piece of paper. There was room for five more stars but they would be difficult ones to earn. It had taken years to earn the first twenty-five, and they were considered the "easy" ones.
-          </p>
+          {/* Displays user name */}
+          <b>{userData.displayName}</b>
+          {/* Displays users about me */}
+          <p>{userData.aboutMe}</p>
         </ProfileUserInfoSection>
-        
-  
+        {/* If authUser show the follow buttons */}
         { AuthUser ?
           showFollowing
           :
           null
         }
       
-        
         <ProfileImagesSection>
+          {
+            showPostGallery
 
-          <ProfilePostImage src={supra} />
-          <ProfilePostImage src={sti} />
-          <ProfilePostImage src={supra} />
-          <ProfilePostImage src={sti} />
-          <ProfilePostImage src={supra} />
-          <ProfilePostImage src={sti} />
-          <ProfilePostImage src={supra} />
-          <ProfilePostImage src={sti} />
-          <ProfilePostImage src={supra} />
-          <ProfilePostImage src={sti} />
-          <ProfilePostImage src={supra} />
-          <ProfilePostImage src={sti} />
-          <ProfilePostImage src={supra} />
-          <ProfilePostImage src={sti} />
-          <ProfilePostImage src={supra} />
-          <ProfilePostImage src={sti} />
-          <ProfilePostImage src={supra} />
-          <ProfilePostImage src={sti} />
-          <ProfilePostImage src={supra} />
-          <ProfilePostImage src={sti} />
-
+          }
         </ProfileImagesSection>
-    </ProfileBox>
+        {
+          showCurrentPost ?
+          showCurrentPost
+          :
+          null
+        }
+      </ProfileBox>
+    }
+    </>
   )
 }
 

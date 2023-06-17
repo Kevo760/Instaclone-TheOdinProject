@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from "styled-components"
 import { CircleProfileLarge } from '../../Styled Components/CircleProfileImg'
 import BottomNav from '../BottomNav'
@@ -8,6 +8,9 @@ import EditProfilePage from './EditProfilePage'
 import { useAuth } from '../../Context/AuthContext'
 import ImagePostMainUserModal from '../Image Post Modal/ImagePostMainUserModal'
 import { useMainUserData } from '../../Context/MainUserDataContext'
+import { auth, db } from '../../firebase'
+import { useNavigate } from 'react-router-dom'
+import { doc, onSnapshot } from "firebase/firestore"
 
 const ProfileBox = styled.div`
     margin: 70px auto 40px auto;
@@ -96,10 +99,20 @@ const ProfileLogOutBtn = styled(ProfileFollowButton)`
 function MainUserProfilePage() {
   const [openEditPage, setOpenEditPage] = useState(false)
   const [showCurrentPost, setShowCurrentPost] = useState()
-  const { mainUserData, mainUserPostData} = useMainUserData()
+  const {handleMainUserData, handleMainUserPostData, mainUserData, mainUserPostData} = useMainUserData()
 
-  const auth = useAuth()
-  const user = auth.currentUser
+  const navigate = useNavigate()
+  const authUser = useAuth()
+  const user = authUser.currentUser
+
+  // shows main users post as a photo gallery with an onclick function to open the photo post
+  const showPostGallery = mainUserPostData ? mainUserPostData.map(dataObject => 
+    <ProfilePostImage 
+      src={dataObject[1].imgURL} 
+      key={dataObject[1].postID} 
+      alt='user post image' 
+      onClick={e => handleOpenCurrentPost(dataObject[1])}
+    />) : null
  
   const handleOpen = () => setOpenEditPage(true)
   const handleClose = () => setOpenEditPage(false)
@@ -112,15 +125,48 @@ function MainUserProfilePage() {
   const handleOpenCurrentPost = (userPostData) => {
     setShowCurrentPost(<ImagePostMainUserModal backFunction={handleCloseCurrentPost} mainUserPost={userPostData}/>)
   }
+  // handles sign out and sets userPostData and userData to null
+  const signOutHandler = () => {
+    signOut(auth).then(() => {
+      handleMainUserPostData(null)
+      handleMainUserData(null)
+      navigate('/')
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
 
-  // shows main users post as a photo gallery with an onclick function to open the photo post
-  const showPostGallery = mainUserPostData ? mainUserPostData.map(dataObject => 
-    <ProfilePostImage 
-      src={dataObject[1].imgURL} 
-      key={dataObject[1].postID} 
-      alt='user post image' 
-      onClick={e => handleOpenCurrentPost(dataObject[1])}
-    />) : null
+  useEffect(() => {
+    // Grabs userPost and user data from firebase
+    const getMainUserData = () => {
+      const unsub = onSnapshot(doc(db, 'userPost', authUser.currentUser.uid), (doc) => {
+        // converts object data into array
+        const postValue = doc.data()
+        const postValueArray = Object.entries(postValue)
+        // sorts the array by newest first
+        const sortPostByTime = postValueArray.sort(function(x,y) {
+        return y[1].timestamp - x[1].timestamp })
+        handleMainUserPostData(sortPostByTime)
+      })
+
+      const unsub2 = onSnapshot(doc(db, 'users', authUser.currentUser.uid), (doc) => {
+        const userValue = doc.data()
+        handleMainUserData(userValue)
+      })
+
+      return () => {
+        unsub()
+        unsub2()
+      }
+    }
+    
+   if(authUser.currentUser && !mainUserPostData) {
+    getMainUserData()
+    console.log('mainUserData')
+   } else return
+
+  }, [authUser.currentUser, handleMainUserData, handleMainUserPostData, mainUserData, mainUserPostData])
+ 
 
     return (
       <>
@@ -128,6 +174,11 @@ function MainUserProfilePage() {
           openEditPage ?
           <EditProfilePage handleClose={handleClose} backFunction={handleClose}/>
           :
+          null
+        }
+
+        {
+          mainUserPostData && mainUserData ?
           <ProfileBox>
             <MainProfileTopBar user={user.displayName} />
             <BottomNav />
@@ -169,7 +220,7 @@ function MainUserProfilePage() {
               </p>
             </ProfileUserInfoSection>
               <ProfileUnFollowButton onClick={handleOpen}>Edit Profile</ProfileUnFollowButton>
-              <ProfileLogOutBtn onClick={() => signOut(auth)}>Log Out</ProfileLogOutBtn>
+              <ProfileLogOutBtn onClick={signOutHandler}>Log Out</ProfileLogOutBtn>
             <ProfileImagesSection>
               {/* If showPostGallery exist showPostGallery */}
               {
@@ -179,7 +230,9 @@ function MainUserProfilePage() {
                 null
               }
             </ProfileImagesSection>
-        </ProfileBox>
+          </ProfileBox>
+          :
+          null
         }
 
         {

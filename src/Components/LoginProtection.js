@@ -1,7 +1,7 @@
 import { Navigate} from 'react-router-dom';
 
 // if currentUser is null navigate to login
-export const NotLoggedInProtection = ({children, authUser}) => {
+export const NotLoggedInProtection = ({authUser, children}) => {
     if(!authUser) {
       return <Navigate to='/login/'/>
     }
@@ -10,7 +10,7 @@ export const NotLoggedInProtection = ({children, authUser}) => {
     )
   }
   // if currentUser is not null navigate to home
-  export const LoggedInProtection = ({children, authUser}) => {
+  export const LoggedInProtection = ({authUser, children}) => {
     if(authUser) {
       return <Navigate to='/'/>
     }

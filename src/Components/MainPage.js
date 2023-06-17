@@ -17,8 +17,8 @@ function MainPage() {
     const authUser = useAuth()
     const {mainPagePostData} = useMainPagePost()
     
-    const CurrentNavBar = authUser ? <Logobar /> : <NotLoggedInTopNav />
-    const showBottomNav = authUser ? <BottomNav /> : null
+    const CurrentNavBar = authUser.currentUser ? <Logobar /> : <NotLoggedInTopNav />
+    const showBottomNav = authUser.currentUser ? <BottomNav /> : null
 
     const showMainPagePosts = mainPagePostData ? mainPagePostData.map(dataObject => <PostBox postData={dataObject[1]} key={dataObject[1].postID} />) : null
 

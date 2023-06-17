@@ -109,9 +109,9 @@ function CommentModal() {
           {
             loadComments
           }
-          {/* If authUser show text bar so your can add comments */}
+          {/* If authUser, show text bar so your can add comments */}
           {
-            authUser ?
+            authUser.currentUser ?
             <CommentTextBar />
             :
             null

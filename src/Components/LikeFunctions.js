@@ -7,7 +7,7 @@ export const checkIsLiked = (likeArray, userUID) => {
     return didUserLikePost
 }
 
-export const likePostHander = async(postID, posterUID, likersUserID) => {
+export const likePostHander = async (postID, posterUID, likersUserID) => {
     try {
         const mainRef = doc(db, 'mainPagePost', 'post')
         const postRef = doc(db, 'userPost', posterUID)

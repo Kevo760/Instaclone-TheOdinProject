@@ -67,9 +67,8 @@ function PostBox(prop) {
     const {postData} = prop
     const {handleShowCommentModal} = useCommentModal()
     const authUser = useAuth()
-
     const whoLikedPost = postData.likes
-    const like = checkIsLiked(whoLikedPost, authUser.currentUser.uid)
+    const like = authUser.currentUser ? checkIsLiked(whoLikedPost, authUser.currentUser.uid) : null
     const isLiked = like ? <AiFillHeart className='like-icon red'/> : <AiOutlineHeart className='like-icon' onClick={e => likePostHander(postData.postID, postData.posterUID, authUser.currentUser.uid)}/>
 
     const openComments = () => {
@@ -86,7 +85,7 @@ function PostBox(prop) {
         <ImgPost src={postData.imgURL}/>
         <PostBottomSection>
             {
-                authUser ?
+                authUser.currentUser ?
                 <div className='like-comment-post'>
                     {isLiked}
                     <FaRegComment className='comment-icon' onClick={e => openComments()}/>

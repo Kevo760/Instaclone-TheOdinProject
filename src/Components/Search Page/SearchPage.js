@@ -4,7 +4,7 @@ import SearchNavBar from './SearchNavBar'
 import BottomNav from '../BottomNav'
 import {MdPersonSearch} from 'react-icons/md'
 import SearchUserBar from './SearchUserBar'
-import { collection, query, where, getDocs, doc, getDoc, updateDoc, deleteField, onSnapshot } from "firebase/firestore"
+import { collection, query, where, getDocs, doc, getDoc, updateDoc, deleteField, onSnapshot, arrayUnion } from "firebase/firestore"
 import { db } from '../../firebase'
 import { useNavigate } from 'react-router-dom'
 import { useUserProfile } from '../../Context/UserProfileContext'
@@ -123,9 +123,14 @@ const SearchPage = () => {
     getUserData()
   }
 
-  const testo = () => {
+  const testo = async() => {
     handleUserProfileID(userProfileID)
     navigate('/userprofile')
+    // const followingRef = doc(db, 'users', 'test')
+
+    // await updateDoc(followingRef, {
+    //   Follower: arrayUnion('testo')
+    // })
   }
 
   return (

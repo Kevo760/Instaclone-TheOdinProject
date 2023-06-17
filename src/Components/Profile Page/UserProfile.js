@@ -9,6 +9,7 @@ import { doc, onSnapshot } from 'firebase/firestore'
 import { db } from '../../firebase'
 import ImagePostModal from '../Image Post Modal/ImagePostModal'
 import LoadingBox from '../LoadingBox'
+import { checkIfFollowing, handleFollowUser } from '../FollowFunctions'
 
 
 const ProfileBox = styled.div`
@@ -60,6 +61,13 @@ const ProfileFollowButton = styled.button`
     &:Hover {
         background-color: rgba(1, 80, 110);
     }
+    &:disabled {
+      background-color: rgba(1, 80, 110);
+      :hover {
+        background-color: rgba(1, 80, 110);
+        cursor: auto;
+      }
+    }
 `
 
 const ProfileImagesSection = styled.div`
@@ -81,24 +89,18 @@ const ProfilePostImage = styled.img`
     }
 `
 
-const ProfileUnFollowButton = styled(ProfileFollowButton)`
-    background-color: rgb(108, 117, 125);
-    &:Hover {
-        background-color: rgb(33, 37, 41);
-    }
-`
-
 function UserProfile() {
-  const AuthUser = useAuth()
+  const authUser = useAuth()
   const {userProfileID} = useUserProfile()
   const [userPost, setUserPost] = useState()
   const [userData, setUserData] = useState()
   const [showCurrentPost, setShowCurrentPost] = useState()
   console.log(userData)
-  console.log(userPost)
 
-  const follow = false
-  const showFollowing = !follow ? <ProfileFollowButton>Follow</ProfileFollowButton> : <ProfileUnFollowButton>Unfollow</ProfileUnFollowButton>
+
+  //If there is an authUser and userData checkIfFollowing by userData followers array, if so return true else return false
+  const follow = authUser && userData ? checkIfFollowing(userData.followers, authUser.currentUser.uid) : null
+  const showFollowing = !follow ? <ProfileFollowButton onClick={e => handleFollowUser(authUser.currentUser.uid, userData.uid)} disabled={follow}>Follow</ProfileFollowButton> : <ProfileFollowButton disabled>Following</ProfileFollowButton>
 
   const showPostGallery = userPost ? userPost.map(dataObject =>
     <ProfilePostImage
@@ -107,6 +109,8 @@ function UserProfile() {
       alt='user post image' 
       onClick={e => handleOpenCurrentPost(dataObject[1])}
     />) : null
+
+  
 
   // sets showCurrentPost to null
   const handleCloseCurrentPost = () => {
@@ -118,7 +122,6 @@ function UserProfile() {
   }
 
   useEffect(() => {
-    console.log('rerender')
     const getUserData = () => {
       try {
         const unsub = onSnapshot(doc(db, 'userPost', userProfileID), (doc) => {
@@ -150,6 +153,7 @@ function UserProfile() {
 
   return (
     <>
+    {/* If userPost and userData is undefined show loadingbox else show profilebox */}
     {
       !userPost && !userData ?
       <LoadingBox />
@@ -188,8 +192,8 @@ function UserProfile() {
           {/* Displays users about me */}
           <p>{userData.aboutMe}</p>
         </ProfileUserInfoSection>
-        {/* If authUser show the follow buttons */}
-        { AuthUser ?
+        {/* If AuthUser is active and authUserUID does not match userprofileid show following button */}
+        { authUser.currentUser && authUser.currentUser.uid !== userProfileID ?
           showFollowing
           :
           null

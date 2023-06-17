@@ -18,6 +18,7 @@ const EditProfileModal = styled.div`
     background-color: white;
     top: 0;
     left: 0;
+    z-index: 3;
 `
 const EditProfileBioInput = styled.textarea`
     width: 100%;

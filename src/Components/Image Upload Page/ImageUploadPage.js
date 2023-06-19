@@ -5,7 +5,6 @@ import ImageFilterSection from './Image Filter Section/ImageFilterSection'
 import styled from "styled-components";
 import { ImgUploadProvider} from '../../Context/ImgUploadContext';
 import { useImgCurrentPage } from '../../Context/ImgPageHandlerContext';
-import LoadingBox from '../LoadingBox';
 
 
 const ImageUploadBox = styled.div`

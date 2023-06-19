@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from "styled-components";
 import { IoArrowBack, IoArrowForward }from 'react-icons/io5'
-import { useShowCropSection, useShowDetailSection } from '../../../Context/ImgPageHandlerContext';
+import { useShowCropSection } from '../../../Context/ImgPageHandlerContext';
 
 
 const ImageFilterTopBar = styled.div`

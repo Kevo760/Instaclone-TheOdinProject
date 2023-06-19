@@ -4,6 +4,7 @@ export function useDebounceEffect(
   fn,
   waitTime,
   deps,
+// eslint-disable-next-line
 ) {
   useEffect(() => {
     const t = setTimeout(() => {
@@ -13,5 +14,7 @@ export function useDebounceEffect(
     return () => {
       clearTimeout(t)
     }
+  // eslint-disable-next-line
   }, deps)
+// eslint-disable-next-line
 }

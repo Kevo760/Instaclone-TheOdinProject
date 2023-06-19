@@ -7,11 +7,11 @@ import { CommentModalProvider } from './Context/CommentModalContext';
 import { MainUserDataProvider } from './Context/MainUserDataContext';
 import { MainPagePostProvier } from './Context/MainPagePostContext';
 import { UserProfileProvider } from './Context/UserProfileContext';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <BrowserRouter>
+  <HashRouter>
     <AuthContextProvider>
       <MainUserDataProvider>
         <MainPagePostProvier>
@@ -25,7 +25,7 @@ root.render(
         </MainPagePostProvier>
       </MainUserDataProvider>
   </AuthContextProvider>
-  </BrowserRouter>
+  </HashRouter>
   
   
 );

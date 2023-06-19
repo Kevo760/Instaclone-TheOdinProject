@@ -1,7 +1,5 @@
 import React from 'react'
 import styled from "styled-components"
-import { BiArrowBack} from 'react-icons/bi'
-
 
 const ProfileTop = styled.div`
     display: flex;

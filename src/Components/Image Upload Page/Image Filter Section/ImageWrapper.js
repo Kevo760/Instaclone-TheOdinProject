@@ -28,7 +28,7 @@ const ImgWrapper = ({ filterClass, imgSrc, filterImgRef}) => {
                 <img
                     className={filterClass}
                     src={imgSrc}
-                    alt='filtered image'
+                    alt='filtered'
                     ref={filterImgRef}
                 />
             </figure>

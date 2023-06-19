@@ -100,8 +100,6 @@ function MainUserProfilePage() {
   const [openEditPage, setOpenEditPage] = useState(false)
   const [showCurrentPost, setShowCurrentPost] = useState()
   const {handleMainUserData, handleMainUserPostData, mainUserData, mainUserPostData} = useMainUserData()
-  console.log(mainUserData)
-  console.log(mainUserPostData)
 
   const navigate = useNavigate()
   const authUser = useAuth()

@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import { CircleProfileSmall } from '../../Styled Components/CircleProfileImg'
+import { useUserProfile } from '../../Context/UserProfileContext'
+import { useNavigate } from 'react-router-dom'
 
 const UserBar = styled.div`
     width: 500px;
@@ -22,11 +24,17 @@ const UserInfoSection = styled.div`
 
 `
 
-const SearchUserBar =({user, viewProfile}) => {
-    
+const SearchUserBar =({user}) => {
+  const {handleUserProfileID} = useUserProfile()
+  const navigate = useNavigate()
+
+  const showUserProfile = () => {
+      handleUserProfileID(user.uid)
+      navigate('/userprofile')
+  }
 
   return (
-    <UserBar onClick={viewProfile}>
+    <UserBar onClick={showUserProfile}>
         <CircleProfileSmall src={user.photoURL} alt='profile picture'/>
 
         <UserInfoSection>

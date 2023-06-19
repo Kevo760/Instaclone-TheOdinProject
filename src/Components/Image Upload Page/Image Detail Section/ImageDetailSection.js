@@ -6,7 +6,7 @@ import { useUploadedImg } from '../../../Context/ImgUploadContext';
 import { ref, getDownloadURL, uploadString } from 'firebase/storage';
 import { db, storage } from '../../../firebase';
 import { useAuth } from '../../../Context/AuthContext';
-import { doc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { doc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid'
 import LoadingBox from '../../LoadingBox';
 import { useNavigate } from 'react-router-dom';
@@ -72,17 +72,19 @@ function ImageDetailSection() {
           getDownloadURL(storageRef)
           .then(async(url) => {
             // Adds post object on user post
-            await updateDoc(postRef, generatePostId, {
-              postID: generatePostId,
-              displayName: displayName,
-              posterUID: userID,
-              userPhotoURL: user.currentUser.photoURL,
-              imgURL: url,
-              description: textValue,
-              comments: '',
-              likes: [],
-              timestamp: serverTimestamp(),
-            })
+            await setDoc(postRef, {
+              [generatePostId]: {
+                postID: generatePostId,
+                displayName: displayName,
+                posterUID: userID,
+                userPhotoURL: user.currentUser.photoURL,
+                imgURL: url,
+                description: textValue,
+                comments: '',
+                likes: [],
+                timestamp: serverTimestamp(),
+              }
+            }, {merge: true})
           // adds postid to mainpage post
           await updateDoc(mainPagePostRef, generatePostId, {
               postID: generatePostId,
@@ -99,11 +101,14 @@ function ImageDetailSection() {
           navigate('/')
           })
           .catch((error) => {
+            console.log(error)
+            console.log('error1')
             setShowErr(true)
             setIsLoading(false)
           });
         });
     } catch(error) {
+      console.log('error 2')
       setShowErr(true)
       setIsLoading(false)
     }

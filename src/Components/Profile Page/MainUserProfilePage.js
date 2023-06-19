@@ -100,6 +100,8 @@ function MainUserProfilePage() {
   const [openEditPage, setOpenEditPage] = useState(false)
   const [showCurrentPost, setShowCurrentPost] = useState()
   const {handleMainUserData, handleMainUserPostData, mainUserData, mainUserPostData} = useMainUserData()
+  console.log(mainUserData)
+  console.log(mainUserPostData)
 
   const navigate = useNavigate()
   const authUser = useAuth()
@@ -139,19 +141,24 @@ function MainUserProfilePage() {
   useEffect(() => {
     // Grabs userPost and user data from firebase
     const getMainUserData = () => {
-      const unsub = onSnapshot(doc(db, 'userPost', authUser.currentUser.uid), (doc) => {
-        // converts object data into array
-        const postValue = doc.data()
-        const postValueArray = Object.entries(postValue)
-        // sorts the array by newest first
-        const sortPostByTime = postValueArray.sort(function(x,y) {
-        return y[1].timestamp - x[1].timestamp })
-        handleMainUserPostData(sortPostByTime)
-      })
 
-      const unsub2 = onSnapshot(doc(db, 'users', authUser.currentUser.uid), (doc) => {
+      const unsub = onSnapshot(doc(db, 'users', authUser.currentUser.uid), (doc) => {
         const userValue = doc.data()
         handleMainUserData(userValue)
+      })
+
+      const unsub2 = onSnapshot(doc(db, 'userPost', authUser.currentUser.uid), (doc) => {
+        // converts object data into array
+        const postValue = doc.data()
+        if(postValue) {
+          const postValueArray = Object.entries(postValue)
+          // sorts the array by newest first
+          const sortPostByTime = postValueArray.sort(function(x,y) {
+          return y[1].timestamp - x[1].timestamp })
+          handleMainUserPostData(sortPostByTime)
+        } else {
+          handleMainUserPostData(null)
+        }
       })
 
       return () => {
@@ -160,7 +167,7 @@ function MainUserProfilePage() {
       }
     }
     
-   if(authUser.currentUser && !mainUserPostData) {
+   if(authUser.currentUser && !mainUserData) {
     getMainUserData()
     console.log('mainUserData')
    } else return
@@ -178,7 +185,7 @@ function MainUserProfilePage() {
         }
 
         {
-          mainUserPostData && mainUserData ?
+           mainUserData ?
           <ProfileBox>
             <MainProfileTopBar user={user.displayName} />
             <BottomNav />
@@ -189,7 +196,11 @@ function MainUserProfilePage() {
               <ProfileColumnTextBox>
                 {/* shows how many post based on mainUserPostData */}
                 <h3>
-                  {mainUserPostData.length}
+                  { mainUserPostData ?
+                    mainUserPostData.length
+                    :
+                    '0'
+                  }
                 </h3>
                 <p>Post</p>
               </ProfileColumnTextBox>

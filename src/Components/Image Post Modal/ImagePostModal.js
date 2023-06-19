@@ -48,7 +48,7 @@ function ImagePostModal({backFunction, post}) {
   return (
     <ImagePostBoxModal>
       <ImagePostBox>
-        <ImagePostTopBar backFunction={backFunction}/>
+        <ImagePostTopBar backFunction={backFunction} userName={post.displayName}/>
         <PostBox postData={post}/>
       </ImagePostBox>
     </ImagePostBoxModal>

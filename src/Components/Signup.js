@@ -169,9 +169,6 @@ function Signup() {
                     following: [],
                     aboutMe: '',
                 });
-                await setDoc(doc(db,'userPost', userID), {
-                    post: []
-                });
                 // After finishing navigate to home
                 navigate('/')
             });
@@ -253,7 +250,6 @@ function Signup() {
                 :
                 null
             }
-
         </SignUpForm>
 
         <SmallSignBox>Have an account? <Link to='/login'>Log In</Link></SmallSignBox>

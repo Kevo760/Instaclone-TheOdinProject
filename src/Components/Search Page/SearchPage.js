@@ -4,10 +4,8 @@ import SearchNavBar from './SearchNavBar'
 import BottomNav from '../BottomNav'
 import {MdPersonSearch} from 'react-icons/md'
 import SearchUserBar from './SearchUserBar'
-import { collection, query, where, getDocs, doc, getDoc, updateDoc, deleteField, onSnapshot, arrayUnion } from "firebase/firestore"
+import { collection, query, where, getDocs} from "firebase/firestore"
 import { db } from '../../firebase'
-import { useNavigate } from 'react-router-dom'
-import { useUserProfile } from '../../Context/UserProfileContext'
 
 
 const SearchBox = styled.div`
@@ -65,14 +63,6 @@ const SearchPage = () => {
   const [username, setUsername] = useState('')
   const [user, setUser] = useState(null)
   const [showError, setShowError] = useState(false)
-  const navigate = useNavigate()
-  const {handleUserProfileID} = useUserProfile()
-
-  const [userPost, setUserPost] = useState()
-  const [userData, setUserData] = useState()
-
-  const userProfileID = 'Dv6cBEmfDiPdnsMso85Q8TU2ISQ2'
-  
 
   const handleSearch = async() => {
     const userRef = collection(db, 'users')
@@ -89,57 +79,18 @@ const SearchPage = () => {
   }
 
   const handleKey = e => {
-    setUser(null)
     setShowError(false)
     if(e.code === 'Enter') {
+      // sets user data to null
+      setUser(null)
       handleSearch()
     }
-    
-  }
-
-  const test = () => {
-    const getUserData = () => {
-      const unsub = onSnapshot(doc(db, 'userPost', userProfileID), (doc) => {
-        // converts object data into array
-        const postValue = doc.data()
-        const postValueArray = Object.entries(postValue)
-        // sorts the array by newest first
-        const sortPostByTime = postValueArray.sort(function(x,y) {
-        return y[1].timestamp - x[1].timestamp })
-        setUserPost(sortPostByTime)
-      })
-
-      const unsub2 = onSnapshot(doc(db, 'users', userProfileID), (doc) => {
-        const userDoc = doc.data()
-        setUserData(userDoc)
-      })
-
-      return () => {
-        unsub()
-        unsub2()
-      }
-    }
-
-    getUserData()
-  }
-
-  const testo = async() => {
-    handleUserProfileID(userProfileID)
-    navigate('/userprofile')
-    // const followingRef = doc(db, 'users', 'test')
-
-    // await updateDoc(followingRef, {
-    //   Follower: arrayUnion('testo')
-    // })
   }
 
   return (
     <SearchBox>
       <SearchNavBar />
       <BottomNav />
-        <button className='test-button' onClick={test}>Find User</button>
-        <button className='test-button' onClick={testo} style={{'marginTop': '100px'}}>Test2</button>
-
       <SearchInputBox>
         <SearchInput 
           placeholder='Enter exact username'

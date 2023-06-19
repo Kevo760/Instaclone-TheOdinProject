@@ -6,6 +6,8 @@ import {FaRegComment} from 'react-icons/fa'
 import { useCommentModal } from '../Context/CommentModalContext';
 import { useAuth } from '../Context/AuthContext';
 import { checkIsLiked, likePostHander } from './LikeFunctions';
+import { useNavigate } from 'react-router-dom';
+import { useUserProfile } from '../Context/UserProfileContext';
 
 
 const Post = styled.div`
@@ -29,6 +31,9 @@ const Post = styled.div`
         cursor: auto;
     }
     .view-comments {
+        cursor: pointer;
+    }
+    .username {
         cursor: pointer;
     }
 `
@@ -67,6 +72,9 @@ function PostBox(prop) {
     const {postData} = prop
     const {handleShowCommentModal} = useCommentModal()
     const authUser = useAuth()
+    const navigate = useNavigate()
+    const {handleUserProfileID} = useUserProfile()
+
     const whoLikedPost = postData.likes
     const like = authUser.currentUser ? checkIsLiked(whoLikedPost, authUser.currentUser.uid) : null
     const isLiked = like ? <AiFillHeart className='like-icon red'/> : <AiOutlineHeart className='like-icon' onClick={e => likePostHander(postData.postID, postData.posterUID, authUser.currentUser.uid)}/>
@@ -75,11 +83,16 @@ function PostBox(prop) {
         handleShowCommentModal(postData)
     }
 
+    const showUserProfile = () => {
+        handleUserProfileID(postData.posterUID)
+        navigate('/userprofile')
+    }
+
   return (
     <Post>
         <PostTopBar>
             <CircleProfileSmall src={postData.userPhotoURL}/>
-            <b>{postData.displayName}</b>
+            <b className='username' onClick={showUserProfile}>{postData.displayName}</b>
         </PostTopBar>
 
         <ImgPost src={postData.imgURL}/>
@@ -98,7 +111,7 @@ function PostBox(prop) {
             </div>
 
             <div className='user-comment-post'>
-                <b>{postData.displayName}</b> 
+                <b className='username' onClick={showUserProfile}>{postData.displayName}</b> 
                 <p>{postData.description}</p>
             </div>
 

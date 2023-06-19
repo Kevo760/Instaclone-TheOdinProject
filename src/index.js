@@ -7,22 +7,26 @@ import { CommentModalProvider } from './Context/CommentModalContext';
 import { MainUserDataProvider } from './Context/MainUserDataContext';
 import { MainPagePostProvier } from './Context/MainPagePostContext';
 import { UserProfileProvider } from './Context/UserProfileContext';
+import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <AuthContextProvider>
-    <CommentModalProvider>
+  <BrowserRouter>
+    <AuthContextProvider>
       <MainUserDataProvider>
         <MainPagePostProvier>
           <UserProfileProvider>
+          <CommentModalProvider>
             <React.StrictMode>
               <App />
             </React.StrictMode>
+            </CommentModalProvider>
           </UserProfileProvider>
         </MainPagePostProvier>
       </MainUserDataProvider>
-    </CommentModalProvider>
   </AuthContextProvider>
+  </BrowserRouter>
+  
   
 );
 

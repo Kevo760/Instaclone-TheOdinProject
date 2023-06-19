@@ -5,7 +5,7 @@ import Signup from './Components/Signup';
 import ImageUploadPage from './Components/Image Upload Page/ImageUploadPage';
 import SearchPage from './Components/Search Page/SearchPage';
 import MainUserProfilePage from './Components/Profile Page/MainUserProfilePage';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { ImgPageHandlerProvider } from './Context/ImgPageHandlerContext';
 import { LoggedInProtection, NotLoggedInProtection } from './Components/LoginProtection';
 import { useAuth } from './Context/AuthContext';
@@ -42,7 +42,6 @@ function App() {
     }
 
     if(!mainPagePostData) {
-      console.log('mainPostData')
       getMainPagePost()
     }
   }, [mainPagePostData, handleMainPagePostData, authUser])
@@ -52,7 +51,6 @@ function App() {
     <div className="App">
       {
         mainPagePostData ?
-        <BrowserRouter>
           <Routes>
             <Route path='/'>
               <Route index element={<MainPage />} />
@@ -71,7 +69,6 @@ function App() {
               <Route path='userprofile' element={<UserProfilePageProtection userProfileID={userProfileID}> <UserProfile/> </UserProfilePageProtection>}></Route>
             </Route>
           </Routes>
-        </BrowserRouter>
         :
         <LoadingBox />
         }

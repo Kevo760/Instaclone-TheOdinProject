@@ -95,11 +95,10 @@ function UserProfile() {
   const [userPost, setUserPost] = useState()
   const [userData, setUserData] = useState()
   const [showCurrentPost, setShowCurrentPost] = useState()
-  console.log(userData)
-
+  const [isLoading, setIsLoading] = useState(true)
 
   //If there is an authUser and userData checkIfFollowing by userData followers array, if so return true else return false
-  const follow = authUser && userData ? checkIfFollowing(userData.followers, authUser.currentUser.uid) : null
+  const follow = authUser.currentUser && userData ? checkIfFollowing(userData.followers, authUser.currentUser.uid) : null
   const showFollowing = !follow ? <ProfileFollowButton onClick={e => handleFollowUser(authUser.currentUser.uid, userData.uid)} disabled={follow}>Follow</ProfileFollowButton> : <ProfileFollowButton disabled>Following</ProfileFollowButton>
 
   const showPostGallery = userPost ? userPost.map(dataObject =>
@@ -124,20 +123,26 @@ function UserProfile() {
   useEffect(() => {
     const getUserData = () => {
       try {
-        const unsub = onSnapshot(doc(db, 'userPost', userProfileID), (doc) => {
-          // converts object data into array
-          const postValue = doc.data()
-          const postValueArray = Object.entries(postValue)
-          // sorts the array by newest first
-          const sortPostByTime = postValueArray.sort(function(x,y) {
-          return y[1].timestamp - x[1].timestamp })
-          setUserPost(sortPostByTime)
-        })
-  
-        const unsub2 = onSnapshot(doc(db, 'users', userProfileID), (doc) => {
+        const unsub = onSnapshot(doc(db, 'users', userProfileID), (doc) => {
           const userDoc = doc.data()
           setUserData(userDoc)
         })
+
+        const unsub2 = onSnapshot(doc(db, 'userPost', userProfileID), (doc) => {
+          // converts object data into array
+          const postValue = doc.data()
+          // If there is post value, organize array and set user post data
+          if(postValue) {
+            const postValueArray = Object.entries(postValue)
+            // sorts the array by newest first
+            const sortPostByTime = postValueArray.sort(function(x,y) {
+            return y[1].timestamp - x[1].timestamp })
+            setUserPost(sortPostByTime)
+          } else {
+            setUserPost(null)
+          }
+        })
+  
         return () => {
           unsub()
           unsub2()
@@ -147,15 +152,22 @@ function UserProfile() {
       }
       
     }
+
+    if(!userData) {
+      getUserData()
+    } else if(userData) {
+      setIsLoading(false)
+    }
     
-    getUserData()
-  }, [userProfileID])
+    
+  }, [userProfileID, userData, userPost, isLoading])
+
 
   return (
     <>
     {/* If userPost and userData is undefined show loadingbox else show profilebox */}
     {
-      !userPost && !userData ?
+      isLoading ?
       <LoadingBox />
       :
       <ProfileBox>
@@ -168,7 +180,12 @@ function UserProfile() {
           <ProfileColumnTextBox>
             {/* Shows how many post the user has */}
             <h3>
-              {userPost.length}
+              {
+                userPost ?
+                userPost.length
+                :
+                '0'
+              }
             </h3>
             <p>Post</p>
           </ProfileColumnTextBox>
@@ -200,17 +217,20 @@ function UserProfile() {
         }
       
         <ProfileImagesSection>
+          {/* Shows users post via gallery */}
           {
             showPostGallery
 
           }
         </ProfileImagesSection>
+        {/* Shows image post modal */}
         {
           showCurrentPost ?
           showCurrentPost
           :
           null
         }
+        
       </ProfileBox>
     }
     </>

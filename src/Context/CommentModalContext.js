@@ -23,6 +23,7 @@ export const CommentModalProvider = ({children}) => {
 
     return (
         <CommentModalContext.Provider value={{showComments, postData, handleShowCommentModal, handleExitCommentModal}}>
+            
                 {
                     showComments ?
                     <CommentModal />

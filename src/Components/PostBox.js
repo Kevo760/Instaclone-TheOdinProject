@@ -36,6 +36,10 @@ const Post = styled.div`
     .username {
         cursor: pointer;
     }
+
+    @media(max-width: 800px) {
+    width: 100vw;
+  }
 `
 const ImgPost = styled.img`
     height: 100%;

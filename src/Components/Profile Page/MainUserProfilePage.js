@@ -24,7 +24,7 @@ const ProfileBox = styled.div`
     gap: 10px;
 
     @media(max-width: 800px) {
-    width: 480px;
+    width: fit-content;
   }
 `
 const ProfileTopSection = styled.div`

@@ -51,7 +51,7 @@ const ImageUploadBox = styled.div`
 `
 
 const CropControlBox = styled.div`
-    width: 420px;
+    width: 380px;
     padding: 16px;
     overflow: hidden;
     display: flex;

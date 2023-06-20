@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import '../../../Styles/instagram.min.css'
 
 
+
 const ImgWrapperStyles = styled.div`
     width: 100%;
     height: 100%;

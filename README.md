@@ -1,70 +1,188 @@
-# Getting Started with Create React App
+# TheOdinProject - Project: JavaScript Final Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a solution to the [JavaScript Final Project]https://www.theodinproject.com/lessons/node-path-javascript-javascript-final-project
+## Table of contents
 
-## Available Scripts
+- [Overview](#overview)
+  - [The challenge](#the-challenge)
+  - [Screenshot](#screenshot)
+  - [Links](#links)
+- [My process](#my-process)
+  - [Built with](#built-with)
+  - [What I learned](#what-i-learned)
+  - [Continued development](#continued-development)
+  - [Useful resources](#useful-resources)
+- [Author](#author)
 
-In the project directory, you can run:
+## Overview
 
-### `npm start`
+### The challenge
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Replicate your favorite website and have 80% of it's functionality
+- Use firebase to host the backend
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Screenshot
 
-### `npm test`
+![](./screenshots/mainpage.JPG)
+![](./screenshots/imgfilter.JPG)
+![](./screenshots/searchpage.JPG)
+![](./screenshots/mainuserprofile.JPG)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Links
 
-### `npm run build`
+- Solution URL: [https://github.com/TheLegend760/Instaclone-TheOdinProject]
+- Live Site URL: [https://thelegend760.github.io/Instaclone-TheOdinProject/]
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## My process
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Built with
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Semantic HTML5 markup
+- CSS custom properties
+- Flexbox
+- Mobile-first workflow
+- [React](https://reactjs.org/) - JS library
+- [Styled Components](https://styled-components.com/) - For styles
+- [React Icons] - https://www.npmjs.com/package/react-icons
+- [MaterialUI] - https://mui.com/
+- [React Image Crop] - https://www.npmjs.com/package/react-image-crop
+- [HTML-to-image] - https://www.npmjs.com/package/html-to-image
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### What I learned
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+I learned a lot by creating this project to writing down on how the layout of the website will work and how till the functions will work together. For example I thought that it would be more effective to upload post data on both userPost and mainPagePost, instead of having to fetch data from the whole userPost via handlePostUpload. I was not aware that I can pass components on Context Providers. I also learned how you can pass variables and functions within the context provider using destructuring, which I provided an example on via CommentModalProvider. Using async functions on useEffect was pretty difficult, I had to scatter the web and look up videos on how it worked. I figured out that youhad to create the aysnc function inside useEffect and run it with if statement, below is the example.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```js
+    const handlePostUpload = async(e) => {
+        e.preventDefault()
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+        setIsLoading(true)
+        const postRef = doc(db, 'userPost', userID)
+        const mainPagePostRef = doc(db, 'mainPagePost', 'post')
+        const generateUID = uuidv4()
+        const generatePostId = generateUID.slice(0,8)
 
-## Learn More
+          try {
+            const storageRef = ref(storage, displayName + '/' + generatePostId)
+            uploadString(storageRef, upImg,'data_url').then((snapshot) => {
+              getDownloadURL(storageRef)
+              .then(async(url) => {
+                // Adds post object on user post
+                await setDoc(postRef, {
+                  [generatePostId]: {
+                    postID: generatePostId,
+                    displayName: displayName,
+                    posterUID: userID,
+                    userPhotoURL: user.currentUser.photoURL,
+                    imgURL: url,
+                    description: textValue,
+                    comments: '',
+                    likes: [],
+                    timestamp: serverTimestamp(),
+                  }
+                }, {merge: true})
+              // adds postid to mainpage post
+              await updateDoc(mainPagePostRef, generatePostId, {
+                  postID: generatePostId,
+                  displayName: displayName,
+                  posterUID: userID,
+                  userPhotoURL: user.currentUser.photoURL,
+                  imgURL: url,
+                  description: textValue,
+                  comments: '',
+                  likes: [],
+                  timestamp: serverTimestamp(),
+              })
+              // after upload is done navigate home
+              navigate('/')
+              })
+              .catch((error) => {
+                setShowErr(true)
+                setIsLoading(false)
+              });
+            });
+        } catch(error) {
+          setShowErr(true)
+          setIsLoading(false)
+        }
+      }
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+    const CommentModalProvider = ({children}) => {
+    const [showComments, setShowComments] = useState(false)
+    const [postData, setPostData] = useState()
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+    const handleShowCommentModal = (postdata) => {
+        setPostData(postdata)
+        setShowComments(true)
+    }
 
-### Code Splitting
+    const handleExitCommentModal = () => {
+        setShowComments(false)
+        setPostData(null)
+    }
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+    return (
+        <CommentModalContext.Provider value={{showComments, postData, handleShowCommentModal, handleExitCommentModal}}>
+            
+                {
+                    showComments ?
+                    <CommentModal />
+                    :
+                    null
+                }
+                {children}
+        </CommentModalContext.Provider>
+    )
+}
 
-### Analyzing the Bundle Size
+useEffect(() => {
+    // Grabs userPost and user data from firebase
+    const getMainUserData = () => {
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+      const unsub = onSnapshot(doc(db, 'users', authUser.currentUser.uid), (doc) => {
+        const userValue = doc.data()
+        handleMainUserData(userValue)
+      })
 
-### Making a Progressive Web App
+      const unsub2 = onSnapshot(doc(db, 'userPost', authUser.currentUser.uid), (doc) => {
+        // converts object data into array
+        const postValue = doc.data()
+        if(postValue) {
+          const postValueArray = Object.entries(postValue)
+          // sorts the array by newest first
+          const sortPostByTime = postValueArray.sort(function(x,y) {
+          return y[1].timestamp - x[1].timestamp })
+          handleMainUserPostData(sortPostByTime)
+        } else {
+          handleMainUserPostData(null)
+        }
+      })
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+      return () => {
+        unsub()
+        unsub2()
+      }
+    }
+    
+   if(authUser.currentUser && !mainUserData) {
+    getMainUserData()
+   } else return
 
-### Advanced Configuration
+  }, [authUser.currentUser, handleMainUserData, handleMainUserPostData, mainUserData, mainUserPostData])
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### Deployment
+### Continued development
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+I would like to learn more of the backend and how I can make websites without limits that firebase puts. I would also like to do more testing, since I did live testing using functions inside the components. 
 
-### `npm run build` fails to minify
+### Useful resources
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- [Youtube - Lama Dev](https://www.youtube.com/watch?v=k4mjF4sPITE&t=3477s) - This video helped me create the idea of how I can implement his firebase video to my instagram clone website.
+- [Firebase](https://firebase.google.com/docs) - This website allowed me to figure out the ins and outs of using firebase with my project.
+
+## Author
+
+- GitHub - [Legend760](https://github.com/TheLegend760)
+- Email - [Kevin David](kevin760g@gmail.com)

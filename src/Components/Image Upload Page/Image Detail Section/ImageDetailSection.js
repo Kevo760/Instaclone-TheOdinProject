@@ -101,14 +101,11 @@ function ImageDetailSection() {
           navigate('/')
           })
           .catch((error) => {
-            console.log(error)
-            console.log('error1')
             setShowErr(true)
             setIsLoading(false)
           });
         });
     } catch(error) {
-      console.log('error 2')
       setShowErr(true)
       setIsLoading(false)
     }

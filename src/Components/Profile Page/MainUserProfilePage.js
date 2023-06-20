@@ -167,7 +167,6 @@ function MainUserProfilePage() {
     
    if(authUser.currentUser && !mainUserData) {
     getMainUserData()
-    console.log('mainUserData')
    } else return
 
   }, [authUser.currentUser, handleMainUserData, handleMainUserPostData, mainUserData, mainUserPostData])

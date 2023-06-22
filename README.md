@@ -5,6 +5,7 @@ This is a solution to the [JavaScript Final Project]https://www.theodinproject.c
 
 - [Overview](#overview)
   - [The challenge](#the-challenge)
+  - [Test Account](#test-account)
   - [Screenshot](#screenshot)
   - [Links](#links)
 - [My process](#my-process)
@@ -20,6 +21,12 @@ This is a solution to the [JavaScript Final Project]https://www.theodinproject.c
 
 - Replicate your favorite website and have 80% of it's functionality
 - Use firebase to host the backend
+
+### Test account
+Please use the account information below, if you do not want to create one to check user login UI.
+
+Email: testuser1@instaclone.com
+PW: test123
 
 ### Screenshot
 

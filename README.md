@@ -37,8 +37,8 @@ PW: test123
 
 ### Links
 
-- Solution URL: [https://github.com/TheLegend760/Instaclone-TheOdinProject]
-- Live Site URL: [https://thelegend760.github.io/Instaclone-TheOdinProject/]
+- Solution URL: [https://github.com/kevo760/Instaclone-TheOdinProject]
+- Live Site URL: [https://kevo760.github.io/Instaclone-TheOdinProject/]
 
 ## My process
 
